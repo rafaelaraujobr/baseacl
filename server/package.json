@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "db_create_tb": "npx knex migrate:latest",
+    "db_remove_tb": "npx knex migrate:rollback",
+    "db_create_data": "npx knex seed:run",
     "dev": "nodemon"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cli-table": "^0.3.6",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
