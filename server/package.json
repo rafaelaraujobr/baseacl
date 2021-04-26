@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "db_create_tb": "npx knex migrate:latest",
-    "db_remove_tb": "npx knex migrate:rollback",
+    "db_remove_tb": "npx knex migrate:rollback --all",
     "db_create_data": "npx knex seed:run",
     "dev": "nodemon"
   },

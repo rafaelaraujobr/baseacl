@@ -5,7 +5,6 @@ exports.up = knex => knex.schema.createTable('roles_users', table => {
     table.foreign('role_id').references('role.id').onDelete('CASCADE').onUpdate('CASCADE');
     table.primary(['user_id', 'role_id']);
     table.timestamp("created_at").defaultTo(knex.fn.now());
-
     console.log('Create table Roles Users')
 });
 
