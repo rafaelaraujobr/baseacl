@@ -5,8 +5,9 @@ exports.seed = async (knex) => {
     return await knex.transaction(async (knex) => {
       await knex("person").del(); // clear table users
       await knex("user").del(); // clear table users
-      await knex("preferences").del();
-      // create people type 
+      await knex("preferences").del(); // create people type 
+
+      // create person
       const person_id = await knex("person")
         .insert({
           id: '00000000-0000-0000-0000-000000000001',
@@ -25,10 +26,9 @@ exports.seed = async (knex) => {
         .returning("id").toString();
 
       // create preference  
-      const preferences_id = await knex("preference")
-        .insert({ user_id})
-        .returning("id").toString();
-
+      await knex("preference")
+        .insert({ user_id })
+        .returning("id");
 
     });
   } catch (error) {

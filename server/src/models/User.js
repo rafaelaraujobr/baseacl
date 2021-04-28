@@ -10,7 +10,7 @@ class User {
                 delete person[0].type
                 if (!person[0].phone) delete person[0].phone
                 let user_id = await trx('user').insert({ person_id: person[0].id, password_hash }).returning("id");
-                let preferences = await trx('preferences').insert({user_id}).returning("theme, language")
+                let preferences = await trx('preferences').insert({ user_id: user_id[0] }).returning(['theme', 'language'])
                 return { ...person[0], ...preferences[0], id: user_id[0], person_id: person[0].id }
             })
         } catch (error) {
@@ -40,9 +40,12 @@ class User {
                     "person.name",
                     "person.email",
                     "user.status",
-                    "user.password_hash"
+                    "user.password_hash",
+                    "preferences.theme",
+                    "preferences.language"
                 )
                 .innerJoin("person", "user.person_id", "person.id")
+                .innerJoin("preferences", "user.id", "preferences.user_id")
                 .where("person.email", email)
                 .first()
         } catch (error) {
@@ -60,9 +63,12 @@ class User {
                     "person.name",
                     "person.email",
                     "user.status",
-                    "user.password_hash"
+                    "user.password_hash",
+                    "preferences.theme",
+                    "preferences.language"
                 )
                 .innerJoin("person", "user.person_id", "person.id")
+                .innerJoin("preferences", "user.id", "preferences.user_id")
                 .where("user.id", id)
                 .first()
 
