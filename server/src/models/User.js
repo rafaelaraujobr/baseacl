@@ -10,7 +10,8 @@ class User {
                 delete person[0].type
                 if (!person[0].phone) delete person[0].phone
                 let user_id = await trx('user').insert({ person_id: person[0].id, password_hash }).returning("id");
-                return { ...person[0], id: user_id[0], person_id: person[0].id }
+                let preferences = await trx('preferences').insert({user_id}).returning("theme, language")
+                return { ...person[0], ...preferences[0], id: user_id[0], person_id: person[0].id }
             })
         } catch (error) {
             console.log(error)
@@ -22,8 +23,8 @@ class User {
             return await knex.transaction(async trx => {
                 let user = await trx('user').select().where({ id }).first();
                 let person = await trx('person').update({ ...data }).where({ id: user.person_id });
-                if (person == 1) return await this.findById(id)
-                else throw 'error update'
+                if (person == 1) return await this.findById(id);
+                else throw 'error update';
             })
         } catch (error) {
             console.log(error)

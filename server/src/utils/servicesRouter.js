@@ -26,7 +26,7 @@ class ServicesRouter {
         colors.white.bold("Paths"),
         colors.white.bold("ON"),
       ],
-      style: { "padding-left": 0, "padding-right": 0 },
+      style: { "padding-left": 2, "padding-right": 2 },
     });
     let routes = [];
     express._router.stack.forEach((middleware) => {
@@ -52,7 +52,7 @@ class ServicesRouter {
     );
     console.log(
       "- Network: " +
-        `http://${ServicesRouter.getIpAddress()}:${port}`.green.underline,
+      `http://${ServicesRouter.getIpAddress()}:${port}`.green.underline,
       "(Ctrl + Click)"
     );
     console.log("- Press Ctrl + C again to force");
