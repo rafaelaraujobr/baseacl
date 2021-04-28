@@ -13,12 +13,12 @@ exports.seed = async (knex) => {
           phone: "21982222393",
           email: "rflaraujodev@gmail.com.br",
         })
-        .returning("id");
+        .returning("id").toString();
 
       // create user
       const user_id = await knex("user")
         .insert({
-          person_id: person_id.toString(),
+          person_id,
           password_hash: await bcryptjs.hash("123456", 10),
         })
         .returning("id");
