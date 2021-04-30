@@ -4,6 +4,7 @@ const User = require("../models/User");
 
 class UserController {
     static async create(req, res) {
+        console.time("runtime");
         try {
             let userExist = await User.findByEmail(req.body.email);
             if (userExist) throw 'this email is already being used'
@@ -15,9 +16,12 @@ class UserController {
             console.log(error);
             res.status(400).json(error).end();
         }
+        console.timeEnd("runtime");
+        console.log(req.method, req.url);
     }
 
     static async findById(req, res) {
+        console.time("runtime");
         try {
             let user = await User.findById(req.params.id)
             if (user) {
@@ -29,9 +33,12 @@ class UserController {
             console.log(error);
             res.status(400).json(error).end();
         }
+        console.timeEnd("runtime");
+        console.log(req.method, req.url);
     }
 
     static async findByEmail(req, res) {
+        console.time("runtime");
         try {
             let user = await User.findByEmail(req.body.email)
             if (user) {
@@ -43,9 +50,12 @@ class UserController {
             console.log(error);
             res.status(400).json(error).end();
         }
+        console.timeEnd("runtime");
+        console.log(req.method, req.url);
     }
 
     static async update(req, res) {
+        console.time("runtime");
         try {
             let user = await User.update(req.params.id, req.body);
             res.status(200).json({ user }).end();
@@ -53,9 +63,12 @@ class UserController {
             console.log(error);
             res.status(400).json(error).end();
         }
+        console.timeEnd("runtime");
+        console.log(req.method, req.url);
     }
 
     static async delete(req, res) {
+        console.time("runtime");
         try {
             let user = await User.delete(req.params.id);
             if (user) res.status(200).json({ user }).end();
@@ -64,6 +77,8 @@ class UserController {
             console.log(error);
             res.status(400).json(error).end();
         }
+        console.timeEnd("runtime");
+        console.log(req.method, req.url);
     }
 }
 

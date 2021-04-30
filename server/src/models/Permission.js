@@ -10,7 +10,7 @@ class Permission {
             console.log(error)
         }
     }
-
+    
     async update(id, data) {
         try {
             let permission = await knex('permission').update({ ...data }).where({ id });

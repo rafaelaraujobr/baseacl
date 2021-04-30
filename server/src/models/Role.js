@@ -24,45 +24,59 @@ class Role {
 
     async findById(id) {
         try {
-            return await knex('permissions_roles')
-            .select(
+
+            return await knex('role').select(
                 'role.id',
                 'role.slug',
                 'role.description',
-                knex.raw("array_agg(permission.id) as permissions"))
-            .innerJoin('role', 'permissions_roles.role_id', 'role.id')
-            .innerJoin('permission', 'permissions_roles.permission_id', 'permission.id')
-            .groupByRaw('role.id, role.slug, role.description')
-            .where({ 'role.id': id })
+                knex.raw(` (select case when role.id is not null then 
+                    json_agg(json_build_object('id',permission.id,'slug',permission.slug,'description', permission.description, 'created_at', permission.created_at))
+                   else null::json end from  permissions_roles 
+                   LEFT JOIN permission ON permission.id = permissions_roles.permission_id
+                   where permissions_roles.role_id = role.id GROUP BY role.id) as permissions`),
+                'role.created_at')
+                .where({ 'role.id': id }).first()
+
         } catch (error) {
             console.log(error)
             return error
         }
     }
-    
+
     async findAll() {
         try {
-            return await knex('permissions_roles').select(
+            return await knex('role').select(
                 'role.id',
                 'role.slug',
                 'role.description',
-                knex.raw("array_agg(permission.id) as permissions")
-            ).innerJoin('role', 'permissions_roles.role_id', 'role.id')
-                .innerJoin('permission', 'permissions_roles.permission_id', 'permission.id')
-                .groupByRaw('role.id, role.slug, role.description')
+                knex.raw(` (select case when role.id is not null then 
+                    json_agg(json_build_object('id',permission.id,'slug',permission.slug,'description', permission.description, 'created_at', permission.created_at))
+                   else null::json end from  permissions_roles 
+                   LEFT JOIN permission ON permission.id = permissions_roles.permission_id
+                   where permissions_roles.role_id = role.id GROUP BY role.id) as permissions`),
+                'role.created_at');
+
+            // return await knex('role').select(
+            //     'role.id',
+            //     'role.slug',
+            //     'role.description',
+            //     knex.raw("array_agg(json_build_object('id',permission.id,'slug',permission.slug,'description', permission.description, 'created_at', permission.created_at)) as permissions"),
+            //     'role.created_at')
+            //     .leftJoin('permissions_roles', 'permissions_roles.role_id', 'role.id')
+            //     .leftJoin('permission', 'permissions_roles.permission_id', 'permission.id')
+            //     .groupBy('role.id')
 
             // return await knex.raw(`SELECT role.id,
             //   role.slug,
             //   role.description,
             //   array_agg(permission.id) as permissions
-            //   FROM permissions_roles
-            //   INNER JOIN role ON role.id = permissions_roles.role_id
-            //   INNER JOIN permission ON permission.id = permissions_roles.permission_id
+            //   FROM role
+            //   LEFT JOIN permissions_roles ON permissions_roles.role_id = role.id
+            //   LEFT JOIN permission ON permission.id = permissions_roles.permission_id
             //   GROUP BY role.id,
             //   role.slug,
             //   role.description
             //      `)
-
         } catch (error) {
             console.log(error)
             return error
