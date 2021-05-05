@@ -20,6 +20,23 @@ class UserController {
         console.log(req.method, req.url);
     }
 
+
+    static async findAll(req, res) {
+        console.time("runtime");
+        try {
+            let users = await User.findAll()
+            if (users) {
+                res.status(200).json({ user }).end();
+            }
+            else throw 'Users does not exist';
+        } catch (error) {
+            console.log(error);
+            res.status(400).json(error).end();
+        }
+        console.timeEnd("runtime");
+        console.log(req.method, req.url);
+    }
+
     static async findById(req, res) {
         console.time("runtime");
         try {

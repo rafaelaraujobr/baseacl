@@ -6,13 +6,13 @@ class Role {
         try {
             return await knex.transaction(async trx => {
                 const role = await trx('role').insert({ ...data }).returning("*");
-                let permissionsNew = []
+                let permissions_roles = []
                 let permissionsReturn = []
                 if (permissions.length > 0) {
                     permissions.forEach(element => {
-                        permissionsNew.push({ role_id: role[0].id, permission_id: element.id })
+                        permissions_roles.push({ role_id: role[0].id, permission_id: element.id })
                     });
-                    let permission_roles = await trx('permissions_roles').insert(permissionsNew).returning("permission_id")
+                    let permission_roles = await trx('permissions_roles').insert(permissions_roles).returning("permission_id")
                     permissionsReturn = await trx('permission').select().whereIn('id', permission_roles)
                 }
                 return { ...role[0], permissions: permissionsReturn }
