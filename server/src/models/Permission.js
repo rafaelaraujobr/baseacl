@@ -4,13 +4,13 @@ class Permission {
 
     async create(data) {
         try {
-            const permission = await knex('permission').insert({ ...data }).returning("*");
-            return permission[0]
+            let permission_id = await knex('permission').insert({ ...data });
+            return this.findById(parseInt(permission_id))
         } catch (error) {
             console.log(error)
         }
     }
-    
+
     async update(id, data) {
         try {
             let permission = await knex('permission').update({ ...data }).where({ id });
@@ -68,3 +68,5 @@ class Permission {
 }
 
 module.exports = new Permission();
+
+

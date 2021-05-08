@@ -26,7 +26,7 @@ class RoleController {
         try {
             let role = await Role.findById(req.params.id);
             if (!role) throw 'Role already exists!'
-            if (role.permissions == null) delete role.permissions;
+            //if (role.permissions == null) delete role.permissions;
             res.status(200).json(role).end();
         } catch (error) {
             console.log(error);
@@ -41,7 +41,7 @@ class RoleController {
         try {
             let roles = await Role.findAll();
             if (!roles) throw 'Roles already exists!'
-            roles.forEach(role => { if (role.permissions == null) delete role.permissions });
+            //roles.forEach(role => { if (role.permissions == null) delete role.permissions });
             res.status(200).json(roles).end();
         } catch (error) {
             console.log(error);

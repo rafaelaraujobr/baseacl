@@ -10,25 +10,21 @@ exports.seed = async (knex) => {
       // create person
       const person_id = await knex("person")
         .insert({
-          id: '00000000-0000-0000-0000-000000000001',
           name: "Rafael Araujo",
           phone: "21982222393",
           email: "rflaraujodev@gmail.com.br",
-        })
-        .returning("id").toString();
+        });
 
       // create user
       const user_id = await knex("user")
         .insert({
-          person_id,
+          person_id: person_id[0],
           password_hash: await bcryptjs.hash("123456", 10),
         })
-        .returning("id").toString();
 
       // create preference  
       await knex("preference")
-        .insert({ user_id })
-        .returning("id");
+        .insert({ user_id: user_id[0] })
 
     });
   } catch (error) {

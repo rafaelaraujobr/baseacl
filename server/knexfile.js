@@ -1,8 +1,8 @@
 module.exports = {
-  client: process.env.DB_TYPE || "pg",
+  client: process.env.DB_TYPE || "mysql2",
   connection: {
-    database: process.env.DB_NAME || "baseacl",
-    user: process.env.DB_USER || "postgres",
+    database: process.env.DB_NAME || "base_acl",
+    user: process.env.DB_USER || "rafael",
     password: process.env.DB_PASS || "1230",
   },
   pool: {
