@@ -6,20 +6,35 @@ class User {
         let { name, email, phone, type, password_hash, roles } = data
         try {
             return await knex.transaction(async trx => {
-                let person_id = await trx('person').insert({ type, name, email, phone });
-                console.log("person_id => ",)
-                let user_id = await trx('user').insert({ person_id: person_id[0], password_hash });
-                await trx('preferences').insert({ user_id })
-                if (roles && roles.length > 0) {
-                    console.log('entrou')
+                const person_id = await trx('person').insert({ type, name, email, phone });
+                const user_id = await trx('user').insert({ person_id: parseInt(person_id), password_hash });
+                await trx('preferences').insert({ user_id: parseInt(user_id) })
+                if (roles.length > 0) {
                     let roles_users = []
                     roles.forEach(role_id => {
-                        roles_users.push({ role_id, user_id: user_id[0] })
+                        roles_users.push({ role_id, user_id: parseInt(user_id) })
                     });
-                    // console.log(roles_users)
                     await trx('roles_users').insert(roles_users)
                 }
-                return user_id[0]
+                return await trx('user')
+                    .select(
+                        "user.id",
+                        "user.person_id",
+                        "person.name",
+                        "person.email",
+                        "user.status",
+                        "user.password_hash",
+                        "preferences.theme",
+                        "preferences.language",
+                        knex.raw("(SELECT CASE WHEN roles_users.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description, 'created_at', role.created_at)) ELSE  JSON_ARRAY() END ) as roles"),
+                    )
+                    .leftJoin('roles_users', 'roles_users.user_id', 'user.id')
+                    .leftJoin('role', 'roles_users.role_id', 'role.id')
+                    .innerJoin("person", "user.person_id", "person.id")
+                    .innerJoin("preferences", "user.id", "preferences.user_id")
+                    .groupBy('user.id')
+                    .where("user.id", parseInt(user_id))
+                    .first()
             })
         } catch (error) {
             console.log(error)
@@ -51,10 +66,14 @@ class User {
                     "user.status",
                     "user.password_hash",
                     "preferences.theme",
-                    "preferences.language"
+                    "preferences.language",
+                    knex.raw("(SELECT CASE WHEN roles_users.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description)) ELSE  JSON_ARRAY() END ) as roles"),
                 )
+                .leftJoin('roles_users', 'roles_users.user_id', 'user.id')
+                .leftJoin('role', 'roles_users.role_id', 'role.id')
                 .innerJoin("person", "user.person_id", "person.id")
                 .innerJoin("preferences", "user.id", "preferences.user_id")
+                .groupBy('user.id')
         } catch (error) {
             console.log(error)
             return error
@@ -72,10 +91,14 @@ class User {
                     "user.status",
                     "user.password_hash",
                     "preferences.theme",
-                    "preferences.language"
+                    "preferences.language",
+                    knex.raw("(SELECT CASE WHEN roles_users.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description)) ELSE  JSON_ARRAY() END ) as roles"),
                 )
+                .leftJoin('roles_users', 'roles_users.user_id', 'user.id')
+                .leftJoin('role', 'roles_users.role_id', 'role.id')
                 .innerJoin("person", "user.person_id", "person.id")
                 .innerJoin("preferences", "user.id", "preferences.user_id")
+                .groupBy('user.id')
                 .where("person.email", email)
                 .first()
         } catch (error) {
@@ -86,31 +109,25 @@ class User {
 
     async findById(id) {
         try {
-
-            //   return await knex.raw(`SELECT usr.id, usr.person_id, prs.name, prf.language, array_agg(rol.id) as roles
-            //   FROM public.user usr 
-            //   LEFT JOIN public.roles_users rou ON rou.user_id = usr.id
-            //   LEFT JOIN public.role rol ON rol.id = rou.role_id
-            //   INNER JOIN public.person prs ON prs.id = usr.person_id
-            //   INNER JOIN public.preferences prf ON prf.user_id = usr.id
-            //   GROUP BY usr.id, prs.id, prf.id 
-            //      `)
-
             return await knex('user')
-            .select(
-                "user.id",
-                "user.person_id",
-                "person.name",
-                "person.email",
-                "user.status",
-                "user.password_hash",
-                "preferences.theme",
-                "preferences.language"
-            )
-            .innerJoin("person", "user.person_id", "person.id")
-            .innerJoin("preferences", "user.id", "preferences.user_id")
-            .where("user.id", id)
-            .first()
+                .select(
+                    "user.id",
+                    "user.person_id",
+                    "person.name",
+                    "person.email",
+                    "user.status",
+                    "user.password_hash",
+                    "preferences.theme",
+                    "preferences.language",
+                    knex.raw("(SELECT CASE WHEN roles_users.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description)) ELSE  JSON_ARRAY() END ) as roles"),
+                )
+                .leftJoin('roles_users', 'roles_users.user_id', 'user.id')
+                .leftJoin('role', 'roles_users.role_id', 'role.id')
+                .innerJoin("person", "user.person_id", "person.id")
+                .innerJoin("preferences", "user.id", "preferences.user_id")
+                .groupBy('user.id')
+                .where("user.id", id)
+                .first()
 
         } catch (error) {
             console.log(error)

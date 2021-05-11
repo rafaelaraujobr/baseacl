@@ -41,7 +41,7 @@ class RoleController {
         try {
             let roles = await Role.findAll();
             if (!roles) throw 'Roles already exists!'
-            //roles.forEach(role => { if (role.permissions == null) delete role.permissions });
+            roles.forEach(role => { if (role.permissions == null) delete role.permissions });
             res.status(200).json(roles).end();
         } catch (error) {
             console.log(error);

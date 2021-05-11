@@ -6,7 +6,6 @@ class Role {
         try {
             return await knex.transaction(async trx => {
                 const role_id = await trx('role').insert({ ...data });
-                console.log('permissions =>', permissions)
                 let permissions_roles = []
                 if (permissions.length > 0) {
                     permissions.forEach(async element => {
@@ -33,17 +32,6 @@ class Role {
 
     async findById(id) {
         try {
-            // return await knex('role').select(
-            //     'role.id',
-            //     'role.slug',
-            //     'role.description',
-            //     knex.raw(` (SELECT CASE WHEN permissions_roles.role_id IS NOT NULL THEN  
-            //         JSON_ARRAYAGG(JSON_OBJECT('id',permission.id,'slug',permission.slug,'description', permission.description))
-            //         ELSE  JSON_ARRAY() END FROM  permissions_roles 
-            //        LEFT JOIN permission ON permission.id = permissions_roles.permission_id
-            //        where permissions_roles.role_id = role.id GROUP BY role.id) as permissions`)
-            // ).where({ 'role.id': id }).first();
-
             return await knex('role').select(
                 'role.id',
                 'role.slug',

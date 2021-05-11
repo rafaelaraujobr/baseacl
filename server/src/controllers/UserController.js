@@ -26,7 +26,7 @@ class UserController {
         try {
             let users = await User.findAll()
             if (users) {
-                res.status(200).json({ user }).end();
+                res.status(200).json({ users }).end();
             }
             else throw 'Users does not exist';
         } catch (error) {
