@@ -1,20 +1,20 @@
 const knex = require("../config/database/index");
 
 class User {
-
     async create(data) {
         let { name, email, phone, type, password_hash, roles } = data
         try {
             return await knex.transaction(async trx => {
                 const person_id = await trx('person').insert({ type, name, email, phone });
                 const user_id = await trx('user').insert({ person_id: parseInt(person_id), password_hash });
-                await trx('preferences').insert({ user_id: parseInt(user_id) })
+                await trx('address').insert({ person_id: parseInt(person_id) });
+                await trx('preference').insert({ user_id: parseInt(user_id) })
                 if (roles.length > 0) {
                     let roles_users = []
                     roles.forEach(role_id => {
                         roles_users.push({ role_id, user_id: parseInt(user_id) })
                     });
-                    await trx('roles_users').insert(roles_users)
+                    await trx('role_user').insert(roles_users)
                 }
                 return await trx('user')
                     .select(
@@ -24,14 +24,21 @@ class User {
                         "person.email",
                         "user.status",
                         "user.password_hash",
-                        "preferences.theme",
-                        "preferences.language",
-                        knex.raw("(SELECT CASE WHEN roles_users.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description, 'created_at', role.created_at)) ELSE  JSON_ARRAY() END ) as roles"),
+                        "preference.theme",
+                        "preference.language",
+                        knex.raw(`(SELECT JSON_ARRAYAGG(JSON_OBJECT('id',address.id,'zip_code', address.zip_code,
+                        'public_place', address.public_place, 'number', address.number, 'complement', address.complement,
+                        'district', address.district,'state', address.state, 'country', address.country, 
+                        'gps_lat', address.gps_lat,'gps_log', address.gps_log ))) as adresses`),
+                        knex.raw(`(SELECT CASE WHEN role_user.role_id IS NOT NULL THEN 
+                            JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description, 
+                            'created_at', role.created_at)) ELSE  JSON_ARRAY() END ) as roles`),
                     )
-                    .leftJoin('roles_users', 'roles_users.user_id', 'user.id')
-                    .leftJoin('role', 'roles_users.role_id', 'role.id')
+                    .leftJoin('role_user', 'role_user.user_id', 'user.id')
+                    .leftJoin('role', 'role_user.role_id', 'role.id')
+                    .innerJoin("address", "user.person_id", "address.person_id")
                     .innerJoin("person", "user.person_id", "person.id")
-                    .innerJoin("preferences", "user.id", "preferences.user_id")
+                    .innerJoin("preference", "user.id", "preference.user_id")
                     .groupBy('user.id')
                     .where("user.id", parseInt(user_id))
                     .first()
@@ -64,15 +71,22 @@ class User {
                     "person.name",
                     "person.email",
                     "user.status",
-                    "user.password_hash",
-                    "preferences.theme",
-                    "preferences.language",
-                    knex.raw("(SELECT CASE WHEN roles_users.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description)) ELSE  JSON_ARRAY() END ) as roles"),
+                    // "user.password_hash",
+                    "preference.theme",
+                    "preference.language",
+                    knex.raw(`(SELECT JSON_ARRAYAGG(JSON_OBJECT('id',address.id,'zip_code', address.zip_code,
+                'public_place', address.public_place, 'number', address.number, 'complement', address.complement,
+                'district', address.district,'state', address.state, 'country', address.country, 
+                'gps_lat', address.gps_lat,'gps_log', address.gps_log ))) as adresses`),
+                    knex.raw(`(SELECT CASE WHEN role_user.role_id IS NOT NULL THEN 
+                    JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description, 
+                    'created_at', role.created_at)) ELSE  JSON_ARRAY() END ) as roles`),
                 )
-                .leftJoin('roles_users', 'roles_users.user_id', 'user.id')
-                .leftJoin('role', 'roles_users.role_id', 'role.id')
+                .leftJoin('role_user', 'role_user.user_id', 'user.id')
+                .leftJoin('role', 'role_user.role_id', 'role.id')
+                .innerJoin("address", "user.person_id", "address.person_id")
                 .innerJoin("person", "user.person_id", "person.id")
-                .innerJoin("preferences", "user.id", "preferences.user_id")
+                .innerJoin("preference", "user.id", "preference.user_id")
                 .groupBy('user.id')
         } catch (error) {
             console.log(error)
@@ -90,14 +104,21 @@ class User {
                     "person.email",
                     "user.status",
                     "user.password_hash",
-                    "preferences.theme",
-                    "preferences.language",
-                    knex.raw("(SELECT CASE WHEN roles_users.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description)) ELSE  JSON_ARRAY() END ) as roles"),
+                    "preference.theme",
+                    "preference.language",
+                    knex.raw(`(SELECT JSON_ARRAYAGG(JSON_OBJECT('id',address.id,'zip_code', address.zip_code,
+                'public_place', address.public_place, 'number', address.number, 'complement', address.complement,
+                'district', address.district,'state', address.state, 'country', address.country, 
+                'gps_lat', address.gps_lat,'gps_log', address.gps_log ))) as adresses`),
+                    knex.raw(`(SELECT CASE WHEN role_user.role_id IS NOT NULL THEN 
+                    JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description, 
+                    'created_at', role.created_at)) ELSE  JSON_ARRAY() END ) as roles`),
                 )
-                .leftJoin('roles_users', 'roles_users.user_id', 'user.id')
-                .leftJoin('role', 'roles_users.role_id', 'role.id')
+                .leftJoin('role_user', 'role_user.user_id', 'user.id')
+                .leftJoin('role', 'role_user.role_id', 'role.id')
+                .innerJoin("address", "user.person_id", "address.person_id")
                 .innerJoin("person", "user.person_id", "person.id")
-                .innerJoin("preferences", "user.id", "preferences.user_id")
+                .innerJoin("preference", "user.id", "preference.user_id")
                 .groupBy('user.id')
                 .where("person.email", email)
                 .first()
@@ -117,14 +138,21 @@ class User {
                     "person.email",
                     "user.status",
                     "user.password_hash",
-                    "preferences.theme",
-                    "preferences.language",
-                    knex.raw("(SELECT CASE WHEN roles_users.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description)) ELSE  JSON_ARRAY() END ) as roles"),
+                    "preference.theme",
+                    "preference.language",
+                    knex.raw(`(SELECT JSON_ARRAYAGG(JSON_OBJECT('id',address.id,'zip_code', address.zip_code,
+                'public_place', address.public_place, 'number', address.number, 'complement', address.complement,
+                'district', address.district,'state', address.state, 'country', address.country, 
+                'gps_lat', address.gps_lat,'gps_log', address.gps_log ))) as adresses`),
+                    knex.raw(`(SELECT CASE WHEN role_user.role_id IS NOT NULL THEN 
+                    JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description, 
+                    'created_at', role.created_at)) ELSE  JSON_ARRAY() END ) as roles`),
                 )
-                .leftJoin('roles_users', 'roles_users.user_id', 'user.id')
-                .leftJoin('role', 'roles_users.role_id', 'role.id')
+                .leftJoin('role_user', 'role_user.user_id', 'user.id')
+                .leftJoin('role', 'role_user.role_id', 'role.id')
+                .innerJoin("address", "user.person_id", "address.person_id")
                 .innerJoin("person", "user.person_id", "person.id")
-                .innerJoin("preferences", "user.id", "preferences.user_id")
+                .innerJoin("preference", "user.id", "preference.user_id")
                 .groupBy('user.id')
                 .where("user.id", id)
                 .first()

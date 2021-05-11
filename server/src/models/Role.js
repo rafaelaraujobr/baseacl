@@ -1,7 +1,6 @@
 const knex = require("../config/database/index");
 
 class Role {
-
     async create(data, permissions) {
         try {
             return await knex.transaction(async trx => {
@@ -11,17 +10,16 @@ class Role {
                     permissions.forEach(async element => {
                         permissions_roles.push({ role_id: parseInt(role_id), permission_id: element.id })
                     });
-                    console.log('permissions_roles =>', permissions_roles)
-                    await trx('permissions_roles').insert(permissions_roles)
+                    await trx('permission_role').insert(permissions_roles)
                 }
                 return await trx('role').select(
                     'role.id',
                     'role.slug',
                     'role.description',
-                    knex.raw("(SELECT CASE WHEN permissions_roles.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',permission.id,'slug',permission.slug,'description', permission.description, 'created_at', permission.created_at)) ELSE  JSON_ARRAY() END ) as permissions"),
+                    knex.raw("(SELECT CASE WHEN permission_role.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',permission.id,'slug',permission.slug,'description', permission.description, 'created_at', permission.created_at)) ELSE  JSON_ARRAY() END ) as permissions"),
                     'role.created_at')
-                    .leftJoin('permissions_roles', 'permissions_roles.role_id', 'role.id')
-                    .leftJoin('permission', 'permissions_roles.permission_id', 'permission.id')
+                    .leftJoin('permission_role', 'permission_role.role_id', 'role.id')
+                    .leftJoin('permission', 'permission_role.permission_id', 'permission.id')
                     .groupBy('role.id')
                     .where({ 'role.id': parseInt(role_id) }).first()
             })
@@ -36,10 +34,10 @@ class Role {
                 'role.id',
                 'role.slug',
                 'role.description',
-                knex.raw("(SELECT CASE WHEN permissions_roles.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',permission.id,'slug',permission.slug,'description', permission.description, 'created_at', permission.created_at)) ELSE  JSON_ARRAY() END ) as permissions"),
+                knex.raw("(SELECT CASE WHEN permission_role.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',permission.id,'slug',permission.slug,'description', permission.description, 'created_at', permission.created_at)) ELSE  JSON_ARRAY() END ) as permissions"),
                 'role.created_at')
-                .leftJoin('permissions_roles', 'permissions_roles.role_id', 'role.id')
-                .leftJoin('permission', 'permissions_roles.permission_id', 'permission.id')
+                .leftJoin('permission_role', 'permission_role.role_id', 'role.id')
+                .leftJoin('permission', 'permission_role.permission_id', 'permission.id')
                 .groupBy('role.id')
                 .where({ 'role.id': id }).first()
 
@@ -55,10 +53,10 @@ class Role {
                 'role.id',
                 'role.slug',
                 'role.description',
-                knex.raw("(SELECT CASE WHEN permissions_roles.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',permission.id,'slug',permission.slug,'description', permission.description)) ELSE  JSON_ARRAY() END ) as permissions"),
+                knex.raw("(SELECT CASE WHEN permission_role.role_id IS NOT NULL THEN JSON_ARRAYAGG(JSON_OBJECT('id',permission.id,'slug',permission.slug,'description', permission.description)) ELSE  JSON_ARRAY() END ) as permissions"),
             )
-                .leftJoin('permissions_roles', 'permissions_roles.role_id', 'role.id')
-                .leftJoin('permission', 'permissions_roles.permission_id', 'permission.id')
+                .leftJoin('permission_role', 'permission_role.role_id', 'role.id')
+                .leftJoin('permission', 'permission_role.permission_id', 'permission.id')
                 .groupBy('role.id')
 
         } catch (error) {

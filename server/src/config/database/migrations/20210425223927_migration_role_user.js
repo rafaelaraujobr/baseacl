@@ -1,4 +1,4 @@
-exports.up = knex => knex.schema.createTable('roles_users', table => {
+exports.up = knex => knex.schema.createTable('role_user', table => {
     table.integer('user_id').unsigned()
     table.foreign('user_id')
         .references('user.id')
@@ -10,7 +10,7 @@ exports.up = knex => knex.schema.createTable('roles_users', table => {
         .onDelete('CASCADE')
         .onUpdate('CASCADE');
     table.primary(['user_id', 'role_id']);
-    console.log('Create table Roles Users')
+    console.log('Create table Role User')
 });
 
-exports.down = knex => knex.schema.dropTable('roles_users');
+exports.down = knex => knex.schema.dropTable('role_user');

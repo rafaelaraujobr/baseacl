@@ -1,5 +1,5 @@
 exports.up = knex =>
-    knex.schema.createTable('permissions_roles', table => {
+    knex.schema.createTable('permission_role', table => {
         table.integer('permission_id').unsigned()
         table.foreign('permission_id')
             .references('permission.id')
@@ -11,7 +11,7 @@ exports.up = knex =>
             .onDelete('CASCADE')
             .onUpdate('CASCADE');
         table.primary(['permission_id', 'role_id']);
-        console.log('Create table Permissions Roles')
+        console.log('Create table Permission Role')
     });
 
-exports.down = knex => knex.schema.dropTable('permissions_roles');
+exports.down = knex => knex.schema.dropTable('permission_role');
