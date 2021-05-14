@@ -1,0 +1,311 @@
+{
+	"info": {
+		"_postman_id": "d44ddfdd-bffd-45b1-87a7-2b1105516d8e",
+		"name": "Base ACL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Criar Conta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"company\": \"FIFI\",\r\n    \"email_company\": \"fifi@gmail.com\",\r\n    \"phone_company\": \"2133547816\",\r\n    \"name\": \"camilla\",\r\n    \"email\": \"camilla@gmail.com\",\r\n    \"phone\": \"21982222393\",\r\n    \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/account/",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"account",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"camilla@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/account/login",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"account",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Obter usuário por id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/user/6",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"user",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter todos os usuário",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/users/",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter usuário por Email",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"rafael@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/user/",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar usuário",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Rafae Araujo\",\r\n    \"email\":\"rafael@gmail.com\",\r\n    \"password\":\"123456\",\r\n    \"type\":\"f\",\r\n    \"roles\":[]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/user/",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar Usuário",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Rafael\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/user/b6b1fd23-7f2b-4565-a855-e4bd99d31938",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"user",
+								"b6b1fd23-7f2b-4565-a855-e4bd99d31938"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Permission",
+			"item": [
+				{
+					"name": "Criar Permissão",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"Deletar produto\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/permission/",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"permission",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter todos as Permissoes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/permission/",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"permission",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Role",
+			"item": [
+				{
+					"name": "Criar Role",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"Administrador\",\r\n    \"permissions\": [1,2,3,4]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/role/",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"role",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter por Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/role/b32394a7-c3c6-4e70-8b95-ac579009a7a1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"role",
+								"b32394a7-c3c6-4e70-8b95-ac579009a7a1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter todos os Roles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/role/",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"role",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
