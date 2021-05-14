@@ -2,11 +2,11 @@ const knex = require("../config/database/index");
 
 class User {
     async create(data) {
-        let { name, email, phone, type, password_hash, roles } = data
+        let { name, email, phone, type, password_hash, roles, realm_id } = data
         try {
             return await knex.transaction(async trx => {
                 const person_id = await trx('person').insert({ type, name, email, phone });
-                const user_id = await trx('user').insert({ person_id: parseInt(person_id), password_hash });
+                const user_id = await trx('user').insert({ person_id: parseInt(person_id), password_hash, realm_id });
                 await trx('address').insert({ person_id: parseInt(person_id) });
                 await trx('preference').insert({ user_id: parseInt(user_id) })
                 if (roles.length > 0) {
@@ -23,7 +23,6 @@ class User {
                         "person.name",
                         "person.email",
                         "user.status",
-                        "user.password_hash",
                         "preference.theme",
                         "preference.language",
                         knex.raw(`(SELECT JSON_ARRAYAGG(JSON_OBJECT('id',address.id,'zip_code', address.zip_code,
@@ -62,7 +61,7 @@ class User {
     }
 
 
-    async findAll() {
+    async findAll(realm) {
         try {
             return await knex('user')
                 .select(
@@ -85,13 +84,14 @@ class User {
                 .innerJoin("address", "user.person_id", "address.person_id")
                 .innerJoin("person", "user.person_id", "person.id")
                 .groupBy('user.id')
+                .where("user.realm_id", realm)
         } catch (error) {
             console.log(error)
             return error
         }
     }
 
-    async findByEmail(email) {
+    async findByEmail(email, realm) {
         try {
             return await knex('user')
                 .select(
@@ -107,7 +107,10 @@ class User {
                 .innerJoin("realm", "user.realm_id", "realm.id")
                 .innerJoin("preference", "user.id", "preference.user_id")
                 .groupBy('user.id')
-                .where("person.email", email)
+                .where('person.email', email)
+                .modify((queryBuilder) => {
+                    if (realm) queryBuilder.where('user.realm_id', realm);
+                })
                 .first()
         } catch (error) {
             console.log(error)

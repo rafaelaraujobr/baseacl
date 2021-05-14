@@ -33,7 +33,7 @@ class AccountController {
             if (!user) throw 'User not found!'
             if (!(await bcryptjs.compare(password, user.password))) throw 'Incorrect password or email';
             delete user['password']
-            let token = jwt.sign({ subject: user.id }, process.env.TOKEN_SECRET, { expiresIn: process.env.TOKEN_EXPIRATION });
+            let token = jwt.sign({ user: user.id, realm: user.realm }, process.env.TOKEN_SECRET, { expiresIn: process.env.TOKEN_EXPIRATION });
             if (!token) throw 'User not found!'
             if (!user.status) throw 'User disable!'
             res.status(200).json({ user, token }).end();
