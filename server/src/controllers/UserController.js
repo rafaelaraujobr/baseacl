@@ -26,6 +26,19 @@ class UserController {
         try {
             let users = await User.findAll()
             if (users) {
+                users.forEach((user, index) => {
+                    user.adresses.forEach((element) => {
+                        if (!element.state) delete element.state;
+                        if (!element.country) delete element.country;
+                        if (!element.number) delete element.number;
+                        if (!element.gps_lat) delete element.gps_lat;
+                        if (!element.gps_log) delete element.gps_log;
+                        if (!element.district) delete element.district;
+                        if (!element.zip_code) delete element.zip_code;
+                        if (!element.complement) delete element.complement;
+                        if (!element.public_place) delete element.public_place;
+                    });
+                });
                 res.status(200).json({ users }).end();
             }
             else throw 'Users does not exist';
@@ -42,7 +55,18 @@ class UserController {
         try {
             let user = await User.findById(req.params.id)
             if (user) {
-                delete user['password_hash']
+                user.adresses.forEach((element) => {
+                    if (!element.state) delete element.state;
+                    if (!element.country) delete element.country;
+                    if (!element.number) delete element.number;
+                    if (!element.gps_lat) delete element.gps_lat;
+                    if (!element.gps_log) delete element.gps_log;
+                    if (!element.district) delete element.district;
+                    if (!element.zip_code) delete element.zip_code;
+                    if (!element.complement) delete element.complement;
+                    if (!element.public_place) delete element.public_place;
+                });
+
                 res.status(200).json({ user }).end();
             }
             else throw 'User does not exist';
@@ -59,7 +83,7 @@ class UserController {
         try {
             let user = await User.findByEmail(req.body.email)
             if (user) {
-                delete user['password_hash']
+                delete user['password']
                 res.status(200).json({ user }).end();
             }
             else throw 'User does not exist';

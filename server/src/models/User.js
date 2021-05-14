@@ -67,13 +67,11 @@ class User {
             return await knex('user')
                 .select(
                     "user.id",
-                    "user.person_id",
+                    "user.realm_id as realm",
                     "person.name",
                     "person.email",
+                    "person.phone",
                     "user.status",
-                    // "user.password_hash",
-                    "preference.theme",
-                    "preference.language",
                     knex.raw(`(SELECT JSON_ARRAYAGG(JSON_OBJECT('id',address.id,'zip_code', address.zip_code,
                 'public_place', address.public_place, 'number', address.number, 'complement', address.complement,
                 'district', address.district,'state', address.state, 'country', address.country, 
@@ -86,7 +84,6 @@ class User {
                 .leftJoin('role', 'role_user.role_id', 'role.id')
                 .innerJoin("address", "user.person_id", "address.person_id")
                 .innerJoin("person", "user.person_id", "person.id")
-                .innerJoin("preference", "user.id", "preference.user_id")
                 .groupBy('user.id')
         } catch (error) {
             console.log(error)
@@ -99,25 +96,15 @@ class User {
             return await knex('user')
                 .select(
                     "user.id",
-                    "user.person_id",
+                    "user.realm_id as realm",
+                    "user.password_hash as password",
                     "person.name",
                     "person.email",
-                    "user.status",
-                    "user.password_hash",
                     "preference.theme",
                     "preference.language",
-                    knex.raw(`(SELECT JSON_ARRAYAGG(JSON_OBJECT('id',address.id,'zip_code', address.zip_code,
-                'public_place', address.public_place, 'number', address.number, 'complement', address.complement,
-                'district', address.district,'state', address.state, 'country', address.country, 
-                'gps_lat', address.gps_lat,'gps_log', address.gps_log ))) as adresses`),
-                    knex.raw(`(SELECT CASE WHEN role_user.role_id IS NOT NULL THEN 
-                    JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description, 
-                    'created_at', role.created_at)) ELSE  JSON_ARRAY() END ) as roles`),
-                )
-                .leftJoin('role_user', 'role_user.user_id', 'user.id')
-                .leftJoin('role', 'role_user.role_id', 'role.id')
-                .innerJoin("address", "user.person_id", "address.person_id")
+                    "user.status")
                 .innerJoin("person", "user.person_id", "person.id")
+                .innerJoin("realm", "user.realm_id", "realm.id")
                 .innerJoin("preference", "user.id", "preference.user_id")
                 .groupBy('user.id')
                 .where("person.email", email)
@@ -136,22 +123,25 @@ class User {
                     "user.person_id",
                     "person.name",
                     "person.email",
+                    "person.phone",
                     "user.status",
-                    "user.password_hash",
                     "preference.theme",
                     "preference.language",
+                    knex.raw(`(SELECT JSON_OBJECT('id',realm.id,'slug', realm.slug, 'name', person_realm.name, 'phone',person_realm.phone, 'email',person_realm.email)) as realm`),
                     knex.raw(`(SELECT JSON_ARRAYAGG(JSON_OBJECT('id',address.id,'zip_code', address.zip_code,
-                'public_place', address.public_place, 'number', address.number, 'complement', address.complement,
-                'district', address.district,'state', address.state, 'country', address.country, 
-                'gps_lat', address.gps_lat,'gps_log', address.gps_log ))) as adresses`),
+            'public_place', address.public_place, 'number', address.number, 'complement', address.complement,
+            'district', address.district,'state', address.state, 'country', address.country, 
+            'gps_lat', address.gps_lat,'gps_log', address.gps_log ))) as adresses`),
                     knex.raw(`(SELECT CASE WHEN role_user.role_id IS NOT NULL THEN 
-                    JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description, 
-                    'created_at', role.created_at)) ELSE  JSON_ARRAY() END ) as roles`),
+                JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description, 
+                'created_at', role.created_at)) ELSE  JSON_ARRAY() END ) as roles`),
                 )
                 .leftJoin('role_user', 'role_user.user_id', 'user.id')
                 .leftJoin('role', 'role_user.role_id', 'role.id')
                 .innerJoin("address", "user.person_id", "address.person_id")
                 .innerJoin("person", "user.person_id", "person.id")
+                .innerJoin("realm", "user.realm_id", "realm.id")
+                .innerJoin("person as person_realm", "realm.person_id", " person_realm.id")
                 .innerJoin("preference", "user.id", "preference.user_id")
                 .groupBy('user.id')
                 .where("user.id", id)
