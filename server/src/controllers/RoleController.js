@@ -5,8 +5,9 @@ class RoleController {
 
     static async create(req, res) {
         console.time("runtime");
-        const { description, permissions } = req.body
-        const slug = slugify(description, { lower: true });
+        let { description, permissions, slug } = req.body
+        if (slug) slug = slugify(slug, { lower: true });
+        else slug = slugify(description, { lower: true });
         try {
             const existRole = await Role.findBySlug(slug);
             if (existRole) throw 'Role already exists!'

@@ -1,7 +1,6 @@
 const slugify = require("slugify");
 const Permission = require("../models/Permission");
 class PermissionController {
-
     /**
      * Controle de criação de permissoes
      * 
@@ -27,7 +26,6 @@ class PermissionController {
             res.status(400).json(error).end();
         }
     }
-
     /**
      * Controle de obtenção de permissão por id
      * 
@@ -46,7 +44,6 @@ class PermissionController {
             res.status(400).json(error).end();
         }
     }
-
     /**
        * Controle de obtenção de permissoes por id do usuario
        * 
@@ -65,7 +62,6 @@ class PermissionController {
             res.status(400).json(error).end();
         }
     }
-
     /**
       * Controle de obtenção das permissões
       * 
