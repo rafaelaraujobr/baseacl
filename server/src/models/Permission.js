@@ -30,6 +30,41 @@ class Permission {
         }
     }
 
+    async findByRoles(roles) {
+        try {
+            return await knex('role').select(
+                knex.raw("(SELECT CASE WHEN permission_role.role_id IS NOT NULL THEN JSON_ARRAYAGG(permission.id) ELSE  JSON_ARRAY() END ) as permissions"))
+                .leftJoin('permission_role', 'permission_role.role_id', 'role.id')
+                .leftJoin('permission', 'permission_role.permission_id', 'permission.id')
+                .groupBy('role.id')
+                .whereIn('role.id', roles)
+        } catch (error) {
+            console.log(error)
+            return error
+        }
+
+    }
+
+    async findByUser(id) {
+        try {
+            return await knex('user').select(
+                knex.raw(`(SELECT CASE WHEN permission_role.role_id IS NOT NULL 
+                    THEN JSON_ARRAYAGG(JSON_OBJECT('id',permission.id,'slug',permission.slug,'description', permission.description)) 
+                    ELSE  JSON_ARRAY() END ) as permissions`),
+            )
+                .leftJoin('role_user', 'role_user.user_id', 'user.id')
+                .leftJoin('role', 'role_user.role_id', 'role.id')
+                .leftJoin('permission_role', 'permission_role.role_id', 'role.id')
+                .leftJoin('permission', 'permission_role.permission_id', 'permission.id')
+                .groupBy('user.id')
+                .where('user.id', id).first()
+        } catch (error) {
+            console.log(error)
+            return error
+        }
+
+    }
+
     async findById(id) {
         try {
             return await knex('permission').select().where({ id }).first()

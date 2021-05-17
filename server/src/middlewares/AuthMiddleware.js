@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 // const Account = require("../models/Account");
+const Permission = require('../models/Permission')
 
 class AuthMiddleware {
   static async Auth(req, res, next) {
@@ -24,10 +25,20 @@ class AuthMiddleware {
         res.status(403).send("voce não está autenticado 3");
       }
     } else {
-      res.status(403).send("voce não enviou o token autenticado");
+      res.status(403).send("You did not send the authenticated token");
       return;
     }
   }
+
+  static permissionAuth(permission) {
+    return async (req, res, next) => {
+      const { permissions } = await Permission.findByUser(req.body.user_id)
+      let userPermissions = permissions.find(item => item.slug == permission)
+      if (userPermissions) next()
+      else res.status(403).send("You do not have permission for this operation");
+    }
+  }
+
 }
 
 module.exports = AuthMiddleware;

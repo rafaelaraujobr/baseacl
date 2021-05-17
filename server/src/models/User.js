@@ -102,10 +102,14 @@ class User {
                     "person.email",
                     "preference.theme",
                     "preference.language",
-                    "user.status")
+                    "user.status",
+                    knex.raw(`(SELECT CASE WHEN role_user.role_id IS NOT NULL THEN 
+                        JSON_ARRAYAGG(role.id) ELSE  JSON_ARRAY() END ) as roles`))
                 .innerJoin("person", "user.person_id", "person.id")
                 .innerJoin("realm", "user.realm_id", "realm.id")
                 .innerJoin("preference", "user.id", "preference.user_id")
+                .leftJoin('role_user', 'role_user.user_id', 'user.id')
+                .leftJoin('role', 'role_user.role_id', 'role.id')
                 .groupBy('user.id')
                 .where('person.email', email)
                 .modify((queryBuilder) => {

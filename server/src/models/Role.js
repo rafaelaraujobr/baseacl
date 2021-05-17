@@ -27,7 +27,6 @@ class Role {
             console.log(error)
         }
     }
-
     async findById(id) {
         try {
             return await knex('role').select(
@@ -46,7 +45,6 @@ class Role {
             return error
         }
     }
-
     async findAll() {
         try {
             return await knex('role').select(
@@ -65,7 +63,6 @@ class Role {
         }
 
     }
-
     async findBySlug(slug) {
         try {
             return await knex('role').select().where({ slug }).first()
@@ -74,7 +71,6 @@ class Role {
             return error
         }
     }
-
     async delete(id) {
         try {
             return await knex('role').where({ id }).del()
