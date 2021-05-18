@@ -31,6 +31,40 @@ class Account {
             console.log(error)
         }
     }
+    async checkAuth(user_id, token,) {
+        try {
+            return await knex.transaction(async (trx) => {
+                return checkAuthentication = await trx('authentication').select().where({ user_id, token }).first();
+            });
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    }
+    async createAuth(data) {
+        const { token, user_id, browser, version, platform, os, source } = data;
+        try {
+            return await knex.transaction(async (knex) => {
+                await knex.delete().where({ user_id }).table("authentication");
+                return await knex.insert({ user_id, token, browser, version, platform, os, source }).table("authentication");
+            });
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    }
+
+    async deleteAuthentication(user_id, token) {
+        try {
+            return await knex
+                .delete()
+                .where({ user_id, token })
+                .table("authentication");
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    }
 
 }
 

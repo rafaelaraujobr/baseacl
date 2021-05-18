@@ -1,4 +1,5 @@
 const express = require('express')
+const useragent = require('express-useragent');
 const cors = require('cors')
 const { resolve } = require("path");
 const fs = require("fs");
@@ -11,6 +12,7 @@ class App {
         this.app.use(express.static(resolve(__dirname, "uploads")));
     }
     middlewares() {
+        this.app.use(useragent.express())
         this.app.use(cors());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.json());

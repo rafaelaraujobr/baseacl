@@ -27,15 +27,17 @@ class AccountController {
 
     static async login(req, res) {
         console.time("runtime");
+        const { browser, version, os, platform, source } = req.useragent
         const { email, password } = req.body
         try {
             let user = await User.findByEmail(email);
             if (!user) throw 'User not found!'
             if (!(await bcryptjs.compare(password, user.password))) throw 'Incorrect password or email';
             delete user['password']
-            let token = jwt.sign({ user: user.id, realm: user.realm, roles: user.roles }, process.env.TOKEN_SECRET, { expiresIn: process.env.TOKEN_EXPIRATION });
+            let token = jwt.sign({ user: user.id, realm: user.realm }, process.env.TOKEN_SECRET, { expiresIn: process.env.TOKEN_EXPIRATION });
             if (!token) throw 'User not found!'
             if (!user.status) throw 'User disable!'
+            await Account.createAuth({ token, user_id: user.id, browser, version, os, platform, source});
             res.status(200).json({ user, token }).end();
         } catch (error) {
             console.log(error);
@@ -43,6 +45,26 @@ class AccountController {
         }
         console.timeEnd("runtime");
         console.log(req.method, req.url);
+    }
+    static async authorization(req, res) {
+        const authToken = req.headers.authorization;
+        if (authToken != undefined) {
+            const bearer = authToken.split(" ");
+            const token = bearer[1];
+            try {
+                const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
+                if (decoded) {
+                    let authentication = await AccountsModel.checkAuthentication(decoded.user, token);
+                    if (authentication) res.status(200).json(authentication);
+                    else res.status(403).send("voce não esta autenticado ");
+                }
+            } catch (error) {
+                console.log(error);
+                res.status(403).send("voce não esta autenticado ");
+            }
+        } else {
+            res.status(403).send("voce não enviou o token autenticado");
+        }
     }
 }
 
