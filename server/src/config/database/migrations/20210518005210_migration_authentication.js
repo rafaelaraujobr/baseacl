@@ -7,10 +7,10 @@ exports.up = (knex) =>
             .references("user.id")
             .onDelete("CASCADE")
             .onUpdate("CASCADE");
-        table.string("browser");
-        table.string("version");
-        table.string("os");
-        table.string("platform");
+        table.integer("is_mobile").defaultTo(0);
+        table.integer("is_desktop").defaultTo(0);
+        table.integer("is_electron").defaultTo(0);
+        table.integer("is_smart_tv").defaultTo(0);
         table.string("source");
         table.string("token", 180).notNullable();
         table.timestamp("created_at").defaultTo(knex.fn.now());

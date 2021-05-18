@@ -20,6 +20,15 @@ exports.seed = async (knex) => {
         { description: "Editar usuarios", slug: "edit-users" },
         { description: "Criar usuarios", slug: "create-users" },
         { description: "Delete usuarios", slug: "delete-users" },
+        { description: "Visualizar papeis", slug: "view-roles" },
+        { description: "Editar papeis", slug: "edit-roles" },
+        { description: "Criar papeis", slug: "create-roles" },
+        { description: "Delete papeis", slug: "delete-roles" },
+        { description: "Visualizar permissões", slug: "view-permissions" },
+        { description: "Editar permissões", slug: "edit-permissions" },
+        { description: "Criar permissões", slug: "create-permissions" },
+        { description: "Delete permissões", slug: "delete-permissions" },
+
       ]);
       const permissions = await trx('permission').select('id')
       const role_id = await trx("role").insert([

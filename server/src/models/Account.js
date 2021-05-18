@@ -34,7 +34,26 @@ class Account {
     async checkAuth(user_id, token,) {
         try {
             return await knex.transaction(async (trx) => {
-                return checkAuthentication = await trx('authentication').select().where({ user_id, token }).first();
+                return await trx('authentication').select(
+                    "user.id",
+                    "authentication.token",
+                    knex.raw(`(SELECT JSON_OBJECT('id',realm.id,'slug', realm.slug, 'name', person_realm.name, 'phone',person_realm.phone, 'email',person_realm.email)) as realm`),
+                    "person.name",
+                    "person.email",
+                    knex.raw(`(SELECT JSON_OBJECT('theme', "preference.theme",'language',  "preference.language")) as preferences`),
+                    knex.raw(`(SELECT CASE WHEN role_user.role_id IS NOT NULL THEN 
+                        JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'description', role.description))
+                         ELSE  JSON_ARRAY() END ) as roles`))
+                    .innerJoin("user", "authentication.user_id", "user.id")
+                    .leftJoin('role_user', 'role_user.user_id', 'user.id')
+                    .leftJoin('role', 'role_user.role_id', 'role.id')
+                    .innerJoin("person", "user.person_id", "person.id")
+                    .innerJoin("realm", "user.realm_id", "realm.id")
+                    .innerJoin("person as person_realm", "realm.person_id", " person_realm.id")
+                    .innerJoin("preference", "user.id", "preference.user_id")
+                    .groupBy('user.id')
+                    .where({ 'authentication.user_id': user_id, 'authentication.token': token })
+                    .first();
             });
         } catch (error) {
             console.log(error);
@@ -42,18 +61,17 @@ class Account {
         }
     }
     async createAuth(data) {
-        const { token, user_id, browser, version, platform, os, source } = data;
+        const { token, user_id, is_mobile, is_desktop, is_electron, is_smart_tv, source } = data;
         try {
             return await knex.transaction(async (knex) => {
                 await knex.delete().where({ user_id }).table("authentication");
-                return await knex.insert({ user_id, token, browser, version, platform, os, source }).table("authentication");
+                return await knex.insert({ user_id, token, is_mobile, is_desktop, is_electron, is_smart_tv, source }).table("authentication");
             });
         } catch (error) {
             console.log(error);
             return error;
         }
     }
-
     async deleteAuthentication(user_id, token) {
         try {
             return await knex

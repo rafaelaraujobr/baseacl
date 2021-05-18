@@ -76,8 +76,7 @@ class User {
                 'district', address.district,'state', address.state, 'country', address.country, 
                 'gps_lat', address.gps_lat,'gps_log', address.gps_log ))) as adresses`),
                     knex.raw(`(SELECT CASE WHEN role_user.role_id IS NOT NULL THEN 
-                    JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description, 
-                    'created_at', role.created_at)) ELSE  JSON_ARRAY() END ) as roles`),
+                    JSON_ARRAYAGG(JSON_OBJECT('id',role.id,'slug',role.slug,'description', role.description)) ELSE  JSON_ARRAY() END ) as roles`),
                 )
                 .leftJoin('role_user', 'role_user.user_id', 'user.id')
                 .leftJoin('role', 'role_user.role_id', 'role.id')

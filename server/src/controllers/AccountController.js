@@ -27,7 +27,8 @@ class AccountController {
 
     static async login(req, res) {
         console.time("runtime");
-        const { browser, version, os, platform, source } = req.useragent
+        const { is_mobile, is_desktop, is_electron, is_smart_tv, source } = req.useragent
+        console.log(req.useragent)
         const { email, password } = req.body
         try {
             let user = await User.findByEmail(email);
@@ -37,7 +38,7 @@ class AccountController {
             let token = jwt.sign({ user: user.id, realm: user.realm }, process.env.TOKEN_SECRET, { expiresIn: process.env.TOKEN_EXPIRATION });
             if (!token) throw 'User not found!'
             if (!user.status) throw 'User disable!'
-            await Account.createAuth({ token, user_id: user.id, browser, version, os, platform, source});
+            await Account.createAuth({ token, user_id: user.id, is_mobile, is_desktop, is_electron, is_smart_tv, source });
             res.status(200).json({ user, token }).end();
         } catch (error) {
             console.log(error);
@@ -48,22 +49,17 @@ class AccountController {
     }
     static async authorization(req, res) {
         const authToken = req.headers.authorization;
-        if (authToken != undefined) {
+        try {
+            if (!authToken) throw 'toke nao informado'
             const bearer = authToken.split(" ");
             const token = bearer[1];
-            try {
-                const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
-                if (decoded) {
-                    let authentication = await AccountsModel.checkAuthentication(decoded.user, token);
-                    if (authentication) res.status(200).json(authentication);
-                    else res.status(403).send("voce não esta autenticado ");
-                }
-            } catch (error) {
-                console.log(error);
-                res.status(403).send("voce não esta autenticado ");
-            }
-        } else {
-            res.status(403).send("voce não enviou o token autenticado");
+            const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
+            const checkAuthentication = await Account.checkAuth(decoded.user, token);
+            if (!checkAuthentication) throw "voce não esta autenticado 2"
+            res.status(200).json(checkAuthentication);
+        } catch (error) {
+            console.log(error);
+            res.status(403).send(error);
         }
     }
 }
