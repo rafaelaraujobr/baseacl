@@ -1,3 +1,9 @@
 {
-    "message": "hello i18n !!"
+    "logo": "logo",
+    "email": "email",
+    "password": "password",
+    "enter": "entrar",
+    "forgot-password": "Forgot password",
+    "create-account": "Create an account",
+    "language": "language"
 }
