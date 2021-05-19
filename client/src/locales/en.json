@@ -2,8 +2,9 @@
     "logo": "logo",
     "email": "email",
     "password": "password",
-    "enter": "entrar",
+    "enter": "Enter",
     "forgot-password": "Forgot password",
     "create-account": "Create an account",
-    "language": "language"
+    "language": "language",
+    "send": "send"
 }

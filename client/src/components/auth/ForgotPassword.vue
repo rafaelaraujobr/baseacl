@@ -42,7 +42,7 @@
         color="primary"
         no-caps
         class="q-pa-sm q-px-md"
-        label="Enviar"
+         :label="$t('send')"
         @click="$emit('change', 'login')"
       />
     </q-card-section>

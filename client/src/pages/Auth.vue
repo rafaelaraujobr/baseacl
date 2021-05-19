@@ -13,44 +13,46 @@
           <forgot-password v-if="forgotPasswordView" @change="changeCard" />
         </q-intersection>
       </div>
-      <div class="text-center text-caption q-pt-sm">© 2021 roostec</div>
+      <div class="row justify-between">
+        <div class="q-mt-sm  text-caption">© 2021 roostec</div>
+        <div>
+          <q-select
+            borderless
+            v-model="languageSelect"
+            :options="languages"
+            dense
+          >
+            <template v-slot:selected>
+              <q-chip
+                v-if="languageSelect"
+                dense
+                square
+                color="white"
+                class="q-my-none q-mr-none text-caption"
+              >
+                <q-avatar rounded>
+                  <img :src="require('@/assets/flag/' + languageSelect.flag)" />
+                </q-avatar>
+                {{ languageSelect.label }}
+              </q-chip>
+              <q-badge v-else>*none*</q-badge>
+            </template>
+            <template v-slot:option="{ itemProps, itemEvents, opt }">
+              <q-item v-bind="itemProps" v-on="itemEvents">
+                <q-item-section avatar>
+                  <q-avatar rounded>
+                    <img :src="require('@/assets/flag/' + opt.flag)" />
+                  </q-avatar>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label v-html="opt.label"></q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+      </div>
     </div>
-    <q-select
-      borderless
-      style="width: 156px"
-      class="fixed-right"
-      v-model="languageSelect"
-      :options="languages"
-      :label="$t('language')"
-    >
-      <template v-slot:selected>
-        <q-chip
-          v-if="languageSelect"
-          dense
-          square
-          color="white"
-          class="q-my-none q-ml-xs q-mr-none"
-        >
-          <q-avatar rounded>
-            <img :src="require('@/assets/' + languageSelect.flag)" />
-          </q-avatar>
-          {{ languageSelect.label }}
-        </q-chip>
-        <q-badge v-else>*none*</q-badge>
-      </template>
-      <template v-slot:option="{ itemProps, itemEvents, opt }">
-        <q-item v-bind="itemProps" v-on="itemEvents">
-          <q-item-section avatar>
-            <q-avatar rounded>
-              <img :src="require('@/assets/' + opt.flag)" />
-            </q-avatar>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label v-html="opt.label"></q-item-label>
-          </q-item-section>
-        </q-item>
-      </template>
-    </q-select>
   </q-page>
 </template>
 
@@ -72,14 +74,14 @@ export default {
       loginView: true,
       languages: [
         {
-          label: "Portugues(BR)",
+          label: "Português(BR)",
           value: "pt-br",
-          flag: "pt-br.png",
+          flag: "pt-br.svg",
         },
         {
           label: "Inglês",
           value: "en",
-          flag: "en.png",
+          flag: "en.svg",
         },
       ],
       registerView: false,
@@ -117,7 +119,7 @@ export default {
   },
   created() {
     this.languageSelect = {
-      label: "Portugues(BR)",
+      label: "Português(BR)",
       value: "pt-br",
       flag: "pt-br.png",
     };

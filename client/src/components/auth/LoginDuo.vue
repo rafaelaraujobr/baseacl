@@ -7,7 +7,10 @@
     :style="isMobile ? `width: ${$q.screen.width}px` : 'width: 400px'"
   >
     <q-card-section class="text-center q-py-sm">
-      <img :src="require('@/assets/logo.svg')" width="100" class="q-pt-sm" />
+      <div>
+        <img :src="require('@/assets/logo.svg')" width="100" class="q-pt-sm" />
+      </div>
+      <div class="text-body1">Fazer login</div>
     </q-card-section>
     <q-card-section class="q-gutter-sm q-py-sm">
       <q-input
@@ -27,52 +30,9 @@
           <q-icon name="mdi-email-outline" color="" />
         </template>
       </q-input>
-      <q-input
-        clearable
-        clear-icon="close"
-        :dark="isMobile"
-        :filled="isMobile"
-        :outlined="!isMobile"
-        v-model="form.password"
-        ref="password"
-        class="modern"
-        :label="$t('password')"
-        :type="showPassword ? 'text' : 'password'"
-        :rules="[(val) => !!val || 'Field is required']"
-      >
-        <template v-slot:prepend>
-          <q-icon name="mdi-lock-open-outline" />
-        </template>
-        <template v-slot:append>
-          <q-btn
-            flat
-            round
-            color="primary"
-            no-caps
-            :icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
-            @click="showPassword = !showPassword"
-          />
-        </template>
-      </q-input>
     </q-card-section>
     <q-card-section class="q-px-md q-pt-none">
-      <q-btn
-        unelevated
-        color="primary"
-        no-caps
-        class="full-width q-mb-md q-py-sm text-body1"
-        :label="$t('enter')"
-        to="/magazine"
-      />
       <div class="row justify-between">
-        <q-btn
-          no-caps
-          unelevated
-          flat
-          :color="isMobile ? 'white' : ''"
-          @click="$emit('change', 'forgot_password')"
-          :label="$t('forgot-password')"
-        />
         <q-btn
           unelevated
           flat
@@ -80,6 +40,13 @@
           color="primary"
           :label="$t('create-account')"
           @click="$emit('change', 'register')"
+        />
+        <q-btn
+          no-caps
+          class="q-py-sm q-px-md"
+          unelevated
+          color="primary"
+          :label="$t('next')"
         />
       </div>
     </q-card-section>
