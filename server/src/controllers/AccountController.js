@@ -11,7 +11,7 @@ class AccountController {
         try {
             let userExist = await User.findByEmail(req.body.email);
             if (userExist) throw 'this email is already being used'
-            if (req.body.company) req.body["slug"] = slugify(req.body.company, { lower: true });
+            if (req.body.company_name) req.body["slug"] = slugify(req.body.company_name, { lower: true });
             else throw 'company null';
             if (req.body.password) req.body["password_hash"] = await bcryptjs.hash(req.body.password, 8);
             else throw 'password null';

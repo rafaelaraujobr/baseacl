@@ -2,10 +2,11 @@ const knex = require("../config/database/index");
 
 class User {
     async create(data) {
-        let { name, email, phone, type, password_hash, roles, realm_id } = data
+        let { name, last_name, email, phone, type, password_hash, roles, realm_id } = data
         try {
             return await knex.transaction(async trx => {
-                const person_id = await trx('person').insert({ type, name, email, phone });
+                const person_id = await trx('person').insert({ type, email, phone });
+                await trx('private_person').insert({ person_id: parseInt(person_id), name, last_name });
                 const user_id = await trx('user').insert({ person_id: parseInt(person_id), password_hash, realm_id });
                 await trx('address').insert({ person_id: parseInt(person_id) });
                 await trx('preference').insert({ user_id: parseInt(user_id) })
@@ -20,7 +21,7 @@ class User {
                     .select(
                         "user.id",
                         "user.person_id",
-                        "person.name",
+                        knex.raw(`CONCAT (private_person.name, ' ', private_person.last_name) as name`),
                         "person.email",
                         "user.status",
                         "preference.theme",
@@ -37,6 +38,7 @@ class User {
                     .leftJoin('role', 'role_user.role_id', 'role.id')
                     .innerJoin("address", "user.person_id", "address.person_id")
                     .innerJoin("person", "user.person_id", "person.id")
+                    .innerJoin('private_person', 'private_person.person_id', 'person.id')
                     .innerJoin("preference", "user.id", "preference.user_id")
                     .groupBy('user.id')
                     .where("user.id", parseInt(user_id))
@@ -60,14 +62,13 @@ class User {
         }
     }
 
-
     async findAll(realm) {
         try {
             return await knex('user')
                 .select(
                     "user.id",
                     "user.realm_id as realm",
-                    "person.name",
+                    knex.raw(`CONCAT (private_person.name, ' ', private_person.last_name) as name`),
                     "person.email",
                     "person.phone",
                     "user.status",
@@ -82,6 +83,7 @@ class User {
                 .leftJoin('role', 'role_user.role_id', 'role.id')
                 .innerJoin("address", "user.person_id", "address.person_id")
                 .innerJoin("person", "user.person_id", "person.id")
+                .leftJoin('private_person', 'private_person.person_id', 'person.id')
                 .groupBy('user.id')
                 .where("user.realm_id", realm)
         } catch (error) {
@@ -97,7 +99,7 @@ class User {
                     "user.id",
                     "user.realm_id as realm",
                     "user.password_hash as password",
-                    "person.name",
+                    knex.raw(`CONCAT (private_person.name, ' ', private_person.last_name) as name`),
                     "person.email",
                     "preference.theme",
                     "preference.language",
@@ -108,6 +110,7 @@ class User {
                 .innerJoin("person", "user.person_id", "person.id")
                 .innerJoin("realm", "user.realm_id", "realm.id")
                 .innerJoin("preference", "user.id", "preference.user_id")
+                .leftJoin('private_person', 'private_person.person_id', 'person.id')
                 .leftJoin('role_user', 'role_user.user_id', 'user.id')
                 .leftJoin('role', 'role_user.role_id', 'role.id')
                 .groupBy('user.id')
@@ -128,13 +131,13 @@ class User {
                 .select(
                     "user.id",
                     "user.person_id",
-                    "person.name",
+                    knex.raw(`CONCAT (private_person.name, ' ', private_person.last_name) as name`),
                     "person.email",
                     "person.phone",
                     "user.status",
                     "preference.theme",
                     "preference.language",
-                    knex.raw(`(SELECT JSON_OBJECT('id',realm.id,'slug', realm.slug, 'name', person_realm.name, 'phone',person_realm.phone, 'email',person_realm.email)) as realm`),
+                    knex.raw(`(SELECT JSON_OBJECT('id',realm.id,'slug', realm.slug, 'name', legal_person.company_name,  'phone',person_realm.phone, 'email',person_realm.email)) as realm`),
                     knex.raw(`(SELECT JSON_ARRAYAGG(JSON_OBJECT('id',address.id,'zip_code', address.zip_code,
             'public_place', address.public_place, 'number', address.number, 'complement', address.complement,
             'district', address.district,'state', address.state, 'country', address.country, 
@@ -149,6 +152,8 @@ class User {
                 .innerJoin("person", "user.person_id", "person.id")
                 .innerJoin("realm", "user.realm_id", "realm.id")
                 .innerJoin("person as person_realm", "realm.person_id", " person_realm.id")
+                .leftJoin('legal_person', 'legal_person.person_id', 'person_realm.id')
+                .leftJoin('private_person', 'private_person.person_id', 'person.id')
                 .innerJoin("preference", "user.id", "preference.user_id")
                 .groupBy('user.id')
                 .where("user.id", id)

@@ -9,7 +9,7 @@
     <q-card-section
       class="text-center text-h6"
       :class="isMobile ? 'q-py-sm text-white' : ''"
-      >Crie sua Conta</q-card-section
+      >{{ $t("create-account") }}</q-card-section
     >
     <q-card-section class="q-gutter-sm">
       <q-input
@@ -20,7 +20,29 @@
         :filled="isMobile"
         :outlined="!isMobile"
         v-model="form.name"
-        label="Nome"
+        :label="$t('name')"
+        :rules="[(val) => !!val || 'Informe seu nome']"
+      />
+      <q-input
+        clearable
+        clear-icon="close"
+        ref="name"
+        :dark="isMobile"
+        :filled="isMobile"
+        :outlined="!isMobile"
+        v-model="form.name"
+        :label="$t('company-name')"
+        :rules="[(val) => !!val || 'Informe seu nome']"
+      />
+      <q-input
+        clearable
+        clear-icon="close"
+        ref="name"
+        :dark="isMobile"
+        :filled="isMobile"
+        :outlined="!isMobile"
+        v-model="form.name"
+        :label="$t('phone')"
         :rules="[(val) => !!val || 'Informe seu nome']"
       />
       <q-input
@@ -33,7 +55,7 @@
         @blur="checkEmail"
         @focus="checkEmailData = null"
         v-model="form.email"
-        label="Email"
+        :label="$t('email')"
         :rules="[
           (val) => !!val || 'Informe um email valido',
           () => checkEmailData != 'error' || 'Este email já está em uso',
@@ -70,7 +92,7 @@
         :outlined="!isMobile"
         v-model="form.password"
         class="q-mb-md"
-        label="Senha"
+        :label="$t('password')"
         :type="showPassword ? 'text' : 'password'"
         :rules="[
           (val) => !!val || 'Informe uma senha',
@@ -82,13 +104,13 @@
           <q-btn
             flat
             no-caps
-            :label="showPassword ? 'Ocultar' : 'Mostrar'"
+            :label="showPassword ? $t('hide') : $t('show')"
             @click="showPassword = !showPassword"
           />
         </template>
         <template v-slot:hint>
           <div class="text-right" style="left: 0; position: absolute; top: 3px">
-            Mínimo de 6 caracteres.
+            {{ $t("minimum_6_characters") }}
           </div>
         </template>
       </q-input>
@@ -100,7 +122,7 @@
         :filled="isMobile"
         :outlined="!isMobile"
         v-model="form.checkPassword"
-        label="Confirmar Senha"
+        :label="$t('confirm-password')"
         :type="showCheckPassword ? 'text' : 'password'"
         :rules="[
           (val) => !!val || 'Informe a confirmação de senha',
@@ -112,7 +134,7 @@
           <q-btn
             flat
             no-caps
-            :label="showCheckPassword ? 'Ocultar' : 'Mostrar'"
+            :label="showCheckPassword ? $t('hide') : $t('show')"
             @click="showCheckPassword = !showCheckPassword"
           />
         </template>
@@ -121,14 +143,14 @@
         <q-toggle
           v-model="form.accept"
           :class="isMobile ? 'text-white' : ''"
-          label="Eu aceitos os termos"
+          :label="$t('accept-terms')"
         />
         <q-btn
           unelevated
           flat
           no-caps
           color="primary"
-          label="Termos"
+          :label="$t('terms')"
           @click="termsDialog = true"
         />
       </div>
@@ -140,7 +162,7 @@
         :color="isMobile ? 'white' : 'dark'"
         no-caps
         class="q-py-sm q-px-md"
-        label="Cancelar"
+        :label="$t('cancel')"
         @click="$emit('change', 'login')"
       />
       <q-btn
@@ -148,7 +170,7 @@
         color="primary"
         no-caps
         class="q-py-sm q-px-md"
-        label="Cadastrar"
+        :label="$t('register')"
         @click="registerAccount()"
       />
     </q-card-section>

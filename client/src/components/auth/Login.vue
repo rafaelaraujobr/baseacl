@@ -9,6 +9,11 @@
     <q-card-section class="text-center q-py-sm">
       <img :src="require('@/assets/logo.svg')" width="100" class="q-pt-sm" />
     </q-card-section>
+    <q-card-section
+      class="text-center text-h6"
+      :class="isMobile ? 'q-py-sm text-white' : ''"
+      >Fazer login</q-card-section
+    >
     <q-card-section class="q-gutter-sm q-py-sm">
       <q-input
         :dark="isMobile"

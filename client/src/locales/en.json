@@ -1,10 +1,22 @@
 {
     "logo": "logo",
-    "email": "email",
-    "password": "password",
+    "email": "Email",
+    "name": "Name",
+    "company-name": "Company name",
+    "register": "Register",
+    "cancel": "Cancel",
+    "show": "Show",
+    "hide": "Hide",
+    "phone": "Phone",
+    "password": "Password",
+    "terms": "Terms",
+    "minimum_6_characters":"Minimum of 6 characters",
+    "accept-terms":"I accept the terms",
+    "confirm-password": "Confirm password",
     "enter": "Enter",
     "forgot-password": "Forgot password",
-    "create-account": "Create an account",
-    "language": "language",
-    "send": "send"
+    "create-account": "Create account",
+    "language": "Language",
+    "send": "Send",
+    "next": "Next"
 }

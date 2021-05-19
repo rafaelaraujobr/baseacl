@@ -41,11 +41,18 @@ exports.seed = async (knex) => {
         });
         await trx('permission_role').insert(permissions_roles)
       }
-      const legal_person_id = await trx('person').insert({ type: 'l', name: 'roostec', email: 'roostec@gmail.com', phone: '2133547816' });
-      const private_person_id = await trx('person').insert({ type: 'p', name: 'Rafael Araujo', email: 'rflaraujodev@gmail.com', phone: '21982222393' });
+      const legal_person_id = await trx('person').insert({ type: 'l', email: 'roostec@gmail.com', phone: '2133547816' });
+      await trx('legal_person').insert({ person_id: parseInt(legal_person_id), company_name: 'roostec' });
+
+      const private_person_id = await trx('person').insert({ type: 'p', email: 'rflaraujodev@gmail.com', phone: '21982222393' });
+      await trx('private_person').insert({ person_id: parseInt(private_person_id), name: 'Rafael', last_name: 'Araujo' });
+
       const realm_id = await trx('realm').insert({ person_id: parseInt(legal_person_id), slug: 'roostec' });
+
       const user_id = await trx('user').insert({ realm_id, person_id: parseInt(private_person_id), password_hash: await bcryptjs.hash("123456", 10) });
+
       const role = await trx('role').select().where({ slug: 'admin' }).first()
+
       await trx('address').insert({ person_id: parseInt(private_person_id) });
       await trx('preference').insert({ user_id: parseInt(user_id) });
       await trx('role_user').insert({ role_id: role.id, user_id: parseInt(user_id) });

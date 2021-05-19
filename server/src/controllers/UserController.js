@@ -5,6 +5,7 @@ const User = require("../models/User");
 class UserController {
     static async create(req, res) {
         console.time("runtime");
+        console.log("=========>", req.body)
         try {
             let userExist = await User.findByEmail(req.body.email);
             if (userExist) throw 'this email is already being used'
