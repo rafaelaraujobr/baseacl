@@ -8,7 +8,7 @@
     <q-card-section
       class="text-center text-h6"
       :class="isMobile ? 'q-py-sm text-white' : ''"
-      >Informe seu e-mail</q-card-section
+      >Recuperar senha</q-card-section
     >
     <q-card-section class="q-gutter-md">
       <q-input
@@ -19,8 +19,7 @@
         :outlined="!isMobile"
         v-model="form.email"
         type="email"
-        label="Email"
-        class="modern"
+        label="Informe seu e-mail"
       >
         <template v-slot:prepend>
           <q-icon name="mdi-email-outline" color="" />
@@ -31,7 +30,7 @@
       <q-btn
         unelevated
         outline
-        :color="isMobile ? 'white' : 'dark'"
+        :color="isMobile ? 'white' : 'primary'"
         no-caps
         class="q-pa-sm q-px-md"
         label="Cancelar"
@@ -66,8 +65,3 @@ export default {
 };
 </script>
    
-<style scoped>
-.q-card {
-  width: 360px;
-}
-</style>

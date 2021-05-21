@@ -4,25 +4,42 @@
     :bordered="!isMobile"
     flat
     :class="isMobile ? 'q-pa-sm  transparent' : 'q-pa-md'"
-    :style="isMobile ? `width: ${$q.screen.width}px` : 'width: 420px'"
+    :style="isMobile ? `width: ${$q.screen.width}px` : 'width: 520px'"
   >
     <q-card-section
       class="text-center text-h6"
       :class="isMobile ? 'q-py-sm text-white' : ''"
       >{{ $t("create-account") }}</q-card-section
     >
-    <q-card-section class="q-gutter-sm">
-      <q-input
-        clearable
-        clear-icon="close"
-        ref="name"
-        :dark="isMobile"
-        :filled="isMobile"
-        :outlined="!isMobile"
-        v-model="form.name"
-        :label="$t('name')"
-        :rules="[(val) => !!val || 'Informe seu nome']"
-      />
+    <q-card-section class="q-col-gutter-sm">
+      <div class="row q-col-gutter-sm">
+        <div class="col">
+          <q-input
+            clearable
+            clear-icon="close"
+            ref="name"
+            :dark="isMobile"
+            :filled="isMobile"
+            :outlined="!isMobile"
+            v-model="form.name"
+            :label="$t('name')"
+            :rules="[(val) => !!val || 'Informe seu nome']"
+          />
+        </div>
+        <div class="col">
+          <q-input
+            clearable
+            clear-icon="close"
+            ref="last_name"
+            :dark="isMobile"
+            :filled="isMobile"
+            :outlined="!isMobile"
+            v-model="form.name"
+            :label="$t('last_name')"
+            :rules="[(val) => !!val || 'Informe seu nome']"
+          />
+        </div>
+      </div>
       <q-input
         clearable
         clear-icon="close"
@@ -94,10 +111,10 @@
         class="q-mb-md"
         :label="$t('password')"
         :type="showPassword ? 'text' : 'password'"
+        lazy-rules
         :rules="[
           (val) => !!val || 'Informe uma senha',
-          (val) =>
-            val.length >= 6 || 'Use no minimo 6 characteres' + val.length,
+          (val) => val.length >= 6 || 'Use no minimo 6 characteres',
         ]"
       >
         <template v-slot:append>
@@ -159,7 +176,7 @@
       <q-btn
         unelevated
         outline
-        :color="isMobile ? 'white' : 'dark'"
+        :color="isMobile ? 'white' : 'primary'"
         no-caps
         class="q-py-sm q-px-md"
         :label="$t('cancel')"

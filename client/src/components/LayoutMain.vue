@@ -19,7 +19,7 @@
           >{{ $t("logo") }}</q-toolbar-title
         >
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>v1.0.1</div>
       </q-toolbar>
     </q-header>
 

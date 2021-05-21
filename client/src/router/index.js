@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../pages/Home.vue'
+import authGuard from "./authGuard";
 
 Vue.use(VueRouter)
 
@@ -8,16 +8,25 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import(/* webpackChunkName: "home" */ '../pages/Home.vue')
   },
   {
     path: '/auth',
     name: 'Auth',
+    meta: {
+      requiresAuth: false,
+    },
     component: () => import(/* webpackChunkName: "auth" */ '../pages/Auth.vue')
   },
   {
     path: '/about',
     name: 'About',
+    meta: {
+      requiresAuth: false,
+    },
     component: () => import(/* webpackChunkName: "about" */ '../pages/About.vue')
   }
 ]
@@ -27,5 +36,7 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach(authGuard);
 
 export default router

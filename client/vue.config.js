@@ -1,4 +1,7 @@
 module.exports = {
+  devServer: {
+    https: true,
+  },
   pluginOptions: {
     quasar: {
       importStrategy: 'kebab',

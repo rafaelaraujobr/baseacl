@@ -97,20 +97,21 @@ class User {
             return await knex('user')
                 .select(
                     "user.id",
-                    "user.realm_id as realm",
-                    "user.password_hash as password",
                     knex.raw(`CONCAT (private_person.name, ' ', private_person.last_name) as name`),
                     "person.email",
-                    "preference.theme",
-                    "preference.language",
-                    "user.status",
+                    knex.raw(`(SELECT JSON_OBJECT('id',realm.id, 'name', legal_person.company_name)) as realm`),
+                    knex.raw(`(SELECT JSON_OBJECT('theme',preference.theme, 'language', preference.language)) as preference`),
                     knex.raw(`(SELECT CASE WHEN role_user.role_id IS NOT NULL THEN 
-                        JSON_ARRAYAGG(JSON_OBJECT('slug',role.slug,'description', role.description)) ELSE  JSON_ARRAY() END ) as roles`)
+                        JSON_ARRAYAGG(JSON_OBJECT('slug',role.slug,'description', role.description)) ELSE  JSON_ARRAY() END ) as roles`),
+                    "user.password_hash as password",
+                    "user.status"
                 )
                 .innerJoin("person", "user.person_id", "person.id")
                 .innerJoin("realm", "user.realm_id", "realm.id")
                 .innerJoin("preference", "user.id", "preference.user_id")
                 .leftJoin('private_person', 'private_person.person_id', 'person.id')
+                .innerJoin("person as person_realm", "realm.person_id", " person_realm.id")
+                .leftJoin('legal_person', 'legal_person.person_id', 'person_realm.id')
                 .leftJoin('role_user', 'role_user.user_id', 'user.id')
                 .leftJoin('role', 'role_user.role_id', 'role.id')
                 .groupBy('user.id')

@@ -2,6 +2,7 @@
   "logo": "logotipo",
   "email": "Email",
   "name": "Nome",
+  "last_name": "Sobrenome",
   "company-name": "Nome da empresa",
   "show": "Mostra",
   "register": "Cadastrar",

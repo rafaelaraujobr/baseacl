@@ -23,7 +23,6 @@
         type="email"
         ref="email"
         :label="$t('email')"
-        class="modern"
         :rules="[(val) => !!val || 'Field is required']"
         clearable
         clear-icon="close"
@@ -40,11 +39,11 @@
         :outlined="!isMobile"
         v-model="form.password"
         ref="password"
-        class="modern"
         :label="$t('password')"
         :type="showPassword ? 'text' : 'password'"
-        :rules="[(val) => !!val || 'Field is required']"
+        :error="!isValidEmail"
       >
+        <template v-slot:error> {{ errorEmail }} </template>
         <template v-slot:prepend>
           <q-icon name="mdi-lock-open-outline" />
         </template>
@@ -67,7 +66,7 @@
         no-caps
         class="full-width q-mb-md q-py-sm text-body1"
         :label="$t('enter')"
-        to="/magazine"
+        @click="login(form.email, form.password)"
       />
       <div class="row justify-between">
         <q-btn
@@ -93,22 +92,24 @@
 
 <script>
 import GlobalService from "@/mixins/GlobalService";
+import AuthService from "@/mixins/AuthService";
 export default {
   name: "Login",
-  mixins: [GlobalService],
+  mixins: [GlobalService, AuthService],
   data() {
     return {
       form: {
         email: "",
         password: "",
       },
+      isValidEmail: true,
+      errorEmail: "",
       showPassword: false,
     };
   },
-  methods: {},
-  created() {
-    console.log(this.$q.screen.width);
+  methods: {
   },
+  created() {},
 };
 </script>
    

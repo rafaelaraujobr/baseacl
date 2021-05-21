@@ -2,6 +2,7 @@
     "logo": "logo",
     "email": "Email",
     "name": "Name",
+    "last_name":"Last name",
     "company-name": "Company name",
     "register": "Register",
     "cancel": "Cancel",

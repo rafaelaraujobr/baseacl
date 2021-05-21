@@ -9,11 +9,12 @@ class AuthMiddleware {
       if (!authToken) throw 'toke nao informado'
       const bearer = authToken.split(" ");
       const token = bearer[1];
+      if (!token) throw 'toke nao informado'
       const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
       req.body["user_id"] = decoded.user;
       req.body["realm_id"] = decoded.realm;
-      const checkAuthentication = await Account.checkAuth(decoded.user, token);
-      if (!checkAuthentication) throw "voce não esta autenticado 2"
+      const checkAuthentication = await Account.checkSession(decoded.user, token);
+      if (!checkAuthentication) throw "middleware voce não esta autenticado 2"
       next();
     } catch (error) {
       console.log(error);
