@@ -1,5 +1,5 @@
 <template>
-  <q-page class="fit row justify-center items-center bg-primary fullscreen">
+  <q-page class="fit row justify-center items-center bg-grey-1 fullscreen">
     <!-- <particles-bg type="cobweb" :bg="true"  num="20"   alpha=" [0.1, 0]"/> -->
     <div class="column">
       <div class="row">
@@ -13,23 +13,22 @@
           <forgot-password v-if="forgotPasswordView" @change="changeCard" />
         </q-intersection>
       </div>
-      <div class="row justify-between">
-        <div class="q-mt-sm  text-caption text-white">© 2021 roostec</div>
+      <div class="row justify-between" :class="isMobile ? 'q-px-lg' : ''">
+        <div class="q-mt-sm text-caption">© 2021 roostec</div>
         <div>
           <q-select
             borderless
             v-model="languageSelect"
             :options="languages"
             dense
-            dark
           >
             <template v-slot:selected>
               <q-chip
                 v-if="languageSelect"
                 dense
                 square
-                color="primary"
-                class="q-my-none q-mr-none text-caption text-white"
+                color="grey-1"
+                class="q-my-none q-mr-none text-caption"
               >
                 <q-avatar rounded>
                   <img :src="require('@/assets/flag/' + languageSelect.flag)" />
@@ -39,7 +38,11 @@
               <q-badge v-else>*none*</q-badge>
             </template>
             <template v-slot:option="{ itemProps, itemEvents, opt }">
-              <q-item v-bind="itemProps" v-on="itemEvents" class="bg-white text-primary">
+              <q-item
+                v-bind="itemProps"
+                v-on="itemEvents"
+                class="bg-white text-primary"
+              >
                 <q-item-section avatar>
                   <q-avatar rounded>
                     <img :src="require('@/assets/flag/' + opt.flag)" />

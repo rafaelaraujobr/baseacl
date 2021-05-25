@@ -1,25 +1,34 @@
 <template>
-  <q-layout view="hHh Lpr lFf">
-    <q-header>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          @click="leftDrawer = !leftDrawer"
-          aria-label="Menu"
-          icon="menu"
+  <q-layout view="lHh Lpr lFf">
+    <q-header bordered class="bg-white text-dark">
+      <q-toolbar class="q-pl-md">
+        <tasty-burger-button
+          type="arrowalt"
+          :active="!$q.platform.is.mobile"
+          size="xs"
+          color="dark"
+          active-color="dark"
+          @toggle="leftDrawer = !leftDrawer"
         />
-        <q-toolbar-title
-          :class="
-            $q.platform.is.mobile
-              ? 'text-center text-weight-medium'
-              : 'text-weight-medium'
-          "
-          >{{ $t("logo") }}</q-toolbar-title
-        >
-
-        <div>v1.0.1</div>
+        <q-separator spaced="1rem" vertical />
+        <q-toolbar-title :class="$q.platform.is.mobile ? 'text-center ' : ''">
+          logotipo
+          <!-- <img
+            :src="require('@/assets/logo-light.svg')"
+            height="40"
+            class="q-pt-sm"
+          /> -->
+        </q-toolbar-title>
+        <menu-user-profile />
+        <q-separator spaced vertical />
+        <q-btn
+          round
+          dense
+          flat
+          unelevated
+          icon="mdi-tune"
+          @click="rightDrawer = !rightDrawer"
+        />
       </q-toolbar>
     </q-header>
 
@@ -27,24 +36,64 @@
       v-model="leftDrawer"
       show-if-above
       bordered
-      content-class="bg-grey-2"
+      :mini-to-overlay="menuMode == 'mouseOver'"
+      :width="$q.platform.is.mobile ? 280 : 256"
+      :breakpoint="700"
+      :mini="miniState"
+      @mouseover="menuMode == 'mouseOver' ? (miniState = false) : ''"
+      @mouseout="menuMode == 'mouseOver' ? (miniState = true) : ''"
     >
     </q-drawer>
 
-    <q-page-container>
+    <q-drawer
+      side="right"
+      v-model="rightDrawer"
+      bordered
+      content-class="bg-grey-3"
+    >
+      <q-list>
+        <q-item-label header>Notificações</q-item-label>
+      </q-list>
+    </q-drawer>
+
+    <q-page-container class="bg-grey-1">
       <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
+import MenuUserProfile from "./widgets/MenuUserProfile.vue";
+import { TastyBurgerButton } from "vue-tasty-burgers";
 export default {
   name: "LayoutMain",
-  components: {},
+  components: { MenuUserProfile, TastyBurgerButton },
   data() {
     return {
       leftDrawer: false,
+      rightDrawer: false,
+      miniState: true,
+      menuMode: "mouseOver",
     };
+  },
+  methods: {
+    setModeMenu() {
+      if (this.$q.screen.name == "xl") {
+        this.menuMode = "mouseClick";
+        this.miniState = false;
+      } else {
+        this.menuMode = "mouseOver";
+        this.miniState = true;
+      }
+    },
+  },
+  watch: {
+    "$q.screen.name"() {
+      this.setModeMenu();
+    },
+  },
+  created() {
+    this.setModeMenu();
   },
 };
 </script>

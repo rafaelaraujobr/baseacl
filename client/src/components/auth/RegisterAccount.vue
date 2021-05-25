@@ -1,14 +1,17 @@
 <template>
   <q-card
     class="register-account"
-    :bordered="!isMobile"
+    :bordered="!$q.platform.is.mobile"
     flat
-    :class="isMobile ? 'q-pa-sm  transparent' : 'q-pa-md'"
-    :style="isMobile ? `width: ${$q.screen.width}px` : 'width: 520px'"
+    :class="$q.platform.is.mobile ? 'q-pa-sm  transparent' : 'q-pa-md'"
+    :style="$q.platform.is.mobile ? `width: ${$q.screen.width}px` : 'width: 520px'"
   >
+    <q-card-section class="text-center q-py-sm">
+      <img :src="require('@/assets/logo.svg')"  height="40" class="q-pt-sm" />
+    </q-card-section>
     <q-card-section
       class="text-center text-h6"
-      :class="isMobile ? 'q-py-sm text-white' : ''"
+      :class="$q.platform.is.mobile ? 'q-py-sm' : ''"
       >{{ $t("create-account") }}</q-card-section
     >
     <q-card-section class="q-col-gutter-sm">
@@ -18,9 +21,7 @@
             clearable
             clear-icon="close"
             ref="name"
-            :dark="isMobile"
-            :filled="isMobile"
-            :outlined="!isMobile"
+            outlined
             v-model="form.name"
             :label="$t('name')"
             :rules="[(val) => !!val || 'Informe seu nome']"
@@ -31,9 +32,7 @@
             clearable
             clear-icon="close"
             ref="last_name"
-            :dark="isMobile"
-            :filled="isMobile"
-            :outlined="!isMobile"
+            outlined
             v-model="form.name"
             :label="$t('last_name')"
             :rules="[(val) => !!val || 'Informe seu nome']"
@@ -44,9 +43,7 @@
         clearable
         clear-icon="close"
         ref="name"
-        :dark="isMobile"
-        :filled="isMobile"
-        :outlined="!isMobile"
+        outlined
         v-model="form.name"
         :label="$t('company-name')"
         :rules="[(val) => !!val || 'Informe seu nome']"
@@ -55,9 +52,7 @@
         clearable
         clear-icon="close"
         ref="name"
-        :dark="isMobile"
-        :filled="isMobile"
-        :outlined="!isMobile"
+        outlined
         v-model="form.name"
         :label="$t('phone')"
         :rules="[(val) => !!val || 'Informe seu nome']"
@@ -66,9 +61,7 @@
         clearable
         clear-icon="close"
         ref="email"
-        :dark="isMobile"
-        :filled="isMobile"
-        :outlined="!isMobile"
+        outlined
         @blur="checkEmail"
         @focus="checkEmailData = null"
         v-model="form.email"
@@ -104,9 +97,7 @@
         clearable
         clear-icon="close"
         ref="password"
-        :dark="isMobile"
-        :filled="isMobile"
-        :outlined="!isMobile"
+        outlined
         v-model="form.password"
         class="q-mb-md"
         :label="$t('password')"
@@ -135,9 +126,7 @@
         clearable
         clear-icon="close"
         ref="checkPassword"
-        :dark="isMobile"
-        :filled="isMobile"
-        :outlined="!isMobile"
+        outlined
         v-model="form.checkPassword"
         :label="$t('confirm-password')"
         :type="showCheckPassword ? 'text' : 'password'"
@@ -159,7 +148,6 @@
       <div class="row justify-between q-my-none">
         <q-toggle
           v-model="form.accept"
-          :class="isMobile ? 'text-white' : ''"
           :label="$t('accept-terms')"
         />
         <q-btn
@@ -176,7 +164,6 @@
       <q-btn
         unelevated
         outline
-        :color="isMobile ? 'white' : 'primary'"
         no-caps
         class="q-py-sm q-px-md"
         :label="$t('cancel')"

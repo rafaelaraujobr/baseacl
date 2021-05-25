@@ -17,9 +17,11 @@ export default async (to, from, next) => {
             });
             store.dispatch("User/ActionSetAuth", data);
             next();
+            console.log('aqui')
         } catch (error) {
             console.log(error);
             store.dispatch("User/ActionSetAuth", null);
+            console.log('aqui')
             next({ name: "Auth" });
         }
     } else {

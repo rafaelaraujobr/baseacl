@@ -1,31 +1,31 @@
 <template>
   <q-card
     class="login"
-    :bordered="!isMobile"
+    :bordered="!$q.platform.is.mobile"
     flat
-    :class="isMobile ? 'q-pa-sm  transparent  ' : 'q-pa-md'"
-    :style="isMobile ? `width: ${$q.screen.width}px` : 'width: 400px'"
+    :class="$q.platform.is.mobile ? 'q-pa-sm  transparent  ' : 'q-pa-md'"
+    :style="$q.platform.is.mobile ? `width: ${$q.screen.width}px` : 'width: 400px'"
   >
     <q-card-section class="text-center q-py-sm">
-      <img :src="require('@/assets/logo.svg')" width="100" class="q-pt-sm" />
+      <img :src="require('@/assets/logo.svg')"  height="40" class="q-pt-sm" />
     </q-card-section>
     <q-card-section
       class="text-center text-h6"
-      :class="isMobile ? 'q-py-sm text-white' : ''"
+      :class="$q.platform.is.mobile ? 'q-py-sm' : ''"
       >Fazer login</q-card-section
     >
     <q-card-section class="q-gutter-sm q-py-sm">
       <q-input
-        :dark="isMobile"
-        :filled="isMobile"
-        :outlined="!isMobile"
+        outlined
         v-model="form.email"
         type="email"
         ref="email"
         :label="$t('email')"
         :rules="[(val) => !!val || 'Field is required']"
         clearable
+        class="bg-grey-1"
         clear-icon="close"
+        @keyup.enter="logIn(form.email, form.password)"
       >
         <template v-slot:prepend>
           <q-icon name="mdi-email-outline" color="" />
@@ -34,14 +34,13 @@
       <q-input
         clearable
         clear-icon="close"
-        :dark="isMobile"
-        :filled="isMobile"
-        :outlined="!isMobile"
+        outlined
         v-model="form.password"
         ref="password"
         :label="$t('password')"
         :type="showPassword ? 'text' : 'password'"
         :error="!isValidEmail"
+        @keyup.enter="logIn(form.email, form.password)"
       >
         <template v-slot:error> {{ errorEmail }} </template>
         <template v-slot:prepend>
@@ -66,14 +65,13 @@
         no-caps
         class="full-width q-mb-md q-py-sm text-body1"
         :label="$t('enter')"
-        @click="login(form.email, form.password)"
+        @click="logIn(form.email, form.password)"
       />
       <div class="row justify-between">
         <q-btn
           no-caps
           unelevated
           flat
-          :color="isMobile ? 'white' : ''"
           @click="$emit('change', 'forgot_password')"
           :label="$t('forgot-password')"
         />
@@ -107,8 +105,7 @@ export default {
       showPassword: false,
     };
   },
-  methods: {
-  },
+  methods: {},
   created() {},
 };
 </script>

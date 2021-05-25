@@ -8,7 +8,7 @@ Vue.use({
         //interceptar requisições
         Vue.prototype.$http.interceptors.request.use(
             (config) => {
-                const token = localStorage.getItem("baseToken");
+                const { token } = localStorage['roostec-base-acl'] ? JSON.parse(localStorage.getItem("roostec-base-acl")) : { token: null };
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`;
                 }

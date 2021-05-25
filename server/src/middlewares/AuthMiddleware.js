@@ -11,8 +11,10 @@ class AuthMiddleware {
       const token = bearer[1];
       if (!token) throw 'toke nao informado'
       const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
+      const { permissions } = await Permission.findByUser(decoded.user)
       req.body["user_id"] = decoded.user;
       req.body["realm_id"] = decoded.realm;
+      req.body.permissions = permissions;
       const checkAuthentication = await Account.checkSession(decoded.user, token);
       if (!checkAuthentication) throw "middleware voce não esta autenticado 2"
       next();
@@ -25,9 +27,8 @@ class AuthMiddleware {
   static permissionAuth(permission) {
     return async (req, res, next) => {
       try {
-        const { permissions } = await Permission.findByUser(req.body.user_id)
-        if (!permissions) throw 'You do not have permission for this operation'
-        let userPermissions = permissions.find(item => item.slug == permission)
+        if (!req.body.permissions) throw 'You do not have permission for this operation'
+        let userPermissions = req.body.permissions.find(item => item.slug == permission)
         if (!userPermissions) throw 'You do not have permission for this operation'
         next()
       } catch (error) {

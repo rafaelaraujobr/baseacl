@@ -29,6 +29,25 @@ export default {
             if (payload) {
                 state.user = payload.user;
                 state.token = payload.token;
+            } else {
+                state.user = {
+                    id: null,
+                    name: null,
+                    email: null,
+                    roles: [{
+                        slug: null,
+                        description: null
+                    }],
+                    realm: {
+                        id: null,
+                        name: null
+                    },
+                    preference: {
+                        theme: "light",
+                        language: 'pt-br'
+                    },
+                };
+                state.token = null;
             }
         },
         SET_USER(state, payload) {

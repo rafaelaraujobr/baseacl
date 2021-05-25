@@ -79,12 +79,11 @@ class Account {
             return error;
         }
     }
-    async deleteSession(user_id, token) {
+    async deleteSession(id) {
         try {
-            return await knex
+            return await knex('session')
                 .delete()
-                .where({ user_id, token })
-                .table("session");
+                .where('user_id', id)
         } catch (error) {
             console.log(error);
             return error;

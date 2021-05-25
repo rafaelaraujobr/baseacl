@@ -55,6 +55,7 @@ class AccountController {
         console.log(req.method, req.url);
     }
     static async authorization(req, res) {
+        console.time("runtime");
         const authToken = req.headers.authorization;
         try {
             const bearer = authToken.split(' ');
@@ -69,16 +70,17 @@ class AccountController {
             console.log(error);
             res.status(403).send(error);
         }
+        console.timeEnd("runtime");
+        console.log(req.method, req.url);
     }
     static async logout(req, res) {
         console.time("runtime");
         const authToken = req.headers["authorization"];
-        const { user_id } = req.body;
         try {
             const bearer = authToken.split(' ');
             const token = bearer[1];
             if (!token) throw { msg: 'toke nao informado', status: 403 }
-            await AccountModel.deleteSession({ token, user_id });
+            await Account.deleteSession(req.body.user_id);
             res.status(200).json({ status: true, msg: "Deslogado" }).end();
         } catch (error) {
             console.log(error);

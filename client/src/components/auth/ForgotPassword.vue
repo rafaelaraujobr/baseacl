@@ -1,22 +1,23 @@
 <template>
   <q-card
-    :bordered="!isMobile"
+    :bordered="!$q.platform.is.mobile"
     flat
-    :class="isMobile ? 'q-pa-sm transparent' : 'q-pa-md'"
-    :style="isMobile ? `width: ${$q.screen.width}px` : 'width: 400px'"
+    :class="$q.platform.is.mobile ? 'q-pa-sm transparent' : 'q-pa-md'"
+    :style="$q.platform.is.mobile ? `width: ${$q.screen.width}px` : 'width: 400px'"
   >
+    <q-card-section class="text-center q-py-sm">
+      <img :src="require('@/assets/logo.svg')"  height="40" class="q-pt-sm" />
+    </q-card-section>
     <q-card-section
       class="text-center text-h6"
-      :class="isMobile ? 'q-py-sm text-white' : ''"
+      :class="$q.platform.is.mobile ? 'q-py-sm' : ''"
       >Recuperar senha</q-card-section
     >
     <q-card-section class="q-gutter-md">
       <q-input
         clearable
         clear-icon="close"
-        :dark="isMobile"
-        :filled="isMobile"
-        :outlined="!isMobile"
+        outlined
         v-model="form.email"
         type="email"
         label="Informe seu e-mail"
@@ -30,7 +31,7 @@
       <q-btn
         unelevated
         outline
-        :color="isMobile ? 'white' : 'primary'"
+        color="primary"
         no-caps
         class="q-pa-sm q-px-md"
         label="Cancelar"
