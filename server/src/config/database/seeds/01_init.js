@@ -64,9 +64,9 @@ exports.seed = async (knex) => {
         { label: "Menu Principal", description: "Menu principal do sistema", slug: "main-menu" },
       ]);
 
-      await trx('item_menu').insert({ label: 'Usuarios', type: 'route', menu_id: parseInt(menu_id), icon: 'mdi-account', path: '/users', permission_id: parseInt(permission_menu_user.id) });
-      await trx('item_menu').insert({ label: 'Papeis', type: 'route', menu_id: parseInt(menu_id), icon: 'mdi-badge-account-outline', path: '/roles', permission_id: parseInt(permission_menu_role.id) });
-      await trx('item_menu').insert({ label: 'Permissões', type: 'route', menu_id: parseInt(menu_id), icon: 'mdi-card-account-details-outline', path: '/permissions', permission_id: parseInt(permission_menu_permission.id) });
+      await trx('item_menu').insert({ label: 'users', type: 'route', menu_id: parseInt(menu_id), icon: 'mdi-account', path: '/users', permission_id: parseInt(permission_menu_user.id) });
+      await trx('item_menu').insert({ label: 'roles', type: 'route', menu_id: parseInt(menu_id), icon: 'mdi-badge-account-outline', path: '/roles', permission_id: parseInt(permission_menu_role.id) });
+      await trx('item_menu').insert({ label: 'permissions', type: 'route', menu_id: parseInt(menu_id), icon: 'mdi-card-account-details-outline', path: '/permissions', permission_id: parseInt(permission_menu_permission.id) });
 
 
       const legal_person_id = await trx('person').insert({ type: 'l', email: 'roostec@gmail.com', phone: '2133547816' });

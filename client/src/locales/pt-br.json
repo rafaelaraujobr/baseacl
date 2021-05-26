@@ -19,5 +19,13 @@
   "create-account": "Criar conta",
   "language": "Idioma",
   "send": "Enviar",
-  "next": "Próximo"
+  "next": "Próximo",
+  "users": "Usuários",
+  "roles": "Papeis",
+  "permissions": "Permissões",
+  "exit": "Sair",
+  "theme": "Tema",
+  "change-password": "Alterar senha",
+  "dark": "Escuro",
+  "light": "Claro"
 }

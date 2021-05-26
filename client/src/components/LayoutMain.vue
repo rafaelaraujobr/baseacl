@@ -1,13 +1,16 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header bordered class="bg-white text-dark">
+    <q-header
+      bordered
+      :class="$q.dark.isActive ? 'bg-dark text-white' : 'bg-white text-dark'"
+    >
       <q-toolbar class="q-pl-md">
         <tasty-burger-button
           type="arrowalt"
           :active="!$q.platform.is.mobile"
           size="xs"
-          color="dark"
-          active-color="dark"
+          :color="$q.dark.isActive ? 'white' : 'dark'"
+          :active-color="$q.dark.isActive ? 'white' : 'dark'"
           @toggle="leftDrawer = !leftDrawer"
         />
         <q-separator spaced="1rem" vertical />
@@ -35,6 +38,7 @@
     <q-drawer
       v-model="leftDrawer"
       show-if-above
+      bordered
       :mini-to-overlay="menuMode == 'mouseOver'"
       :width="$q.platform.is.mobile ? 280 : 256"
       :breakpoint="700"
@@ -58,7 +62,7 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container class="bg-grey-1">
+    <q-page-container :class="$q.dark.isActive ? 'white' : 'bg-grey-1'">
       <router-view />
     </q-page-container>
   </q-layout>

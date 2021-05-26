@@ -5,7 +5,7 @@
         <q-item-section avatar>
           <q-icon :name="item.icon" />
         </q-item-section>
-        <q-item-section>{{ item.label }}</q-item-section>
+        <q-item-section>{{ $t(item.label) }}</q-item-section>
       </q-item>
     </q-list>
     <q-list class="absolute-bottom">
@@ -13,7 +13,7 @@
         <q-item-section avatar>
           <q-icon name="mdi-power" />
         </q-item-section>
-        <q-item-section>Sair</q-item-section>
+        <q-item-section>{{ $t('exit') }}</q-item-section>
       </q-item>
     </q-list>
   </div>
