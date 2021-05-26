@@ -1,6 +1,12 @@
 <template>
   <q-page class="fit row justify-center items-center bg-grey-1 fullscreen">
-    <!-- <particles-bg type="cobweb" :bg="true"  num="20"   alpha=" [0.1, 0]"/> -->
+    <particles-bg
+      type="cobweb"
+      color="#027BE3"
+      :bg="true"
+      num="50"
+      alpha=" [0.1, 0]"
+    />
     <div class="column">
       <div class="row">
         <q-intersection transition="flip-left" v-show="loginView">
@@ -65,6 +71,8 @@ import Login from "@/components/auth/Login.vue";
 import RegisterAccount from "@/components/auth/RegisterAccount.vue";
 import ForgotPassword from "@/components/auth/ForgotPassword.vue";
 import GlobalService from "@/mixins/GlobalService";
+import { ParticlesBg } from "particles-bg-vue";
+
 export default {
   name: "Auth",
   mixins: [GlobalService],
@@ -72,6 +80,7 @@ export default {
     RegisterAccount,
     Login,
     ForgotPassword,
+    ParticlesBg,
   },
   data() {
     return {
@@ -95,7 +104,6 @@ export default {
   },
   watch: {
     languageSelect() {
-      console.log(this.languageSelect);
       // this.ActionSetLanguage(this.languageSelect);
       this.$i18n.locale = this.languageSelect.value;
     },

@@ -4,7 +4,9 @@ export default {
         ...mapActions("User", ["ActionSetUser", "ActionSetToken", "ActionSetAuth"]),
         async logIn(email, password) {
             try {
-                const { data } = await this.$http.post("/account/login", {
+                if (!email) throw 'email empyt'
+                if (!password) throw 'password empyt'
+                const { data } = await this.$http.post("/v1/account/login", {
                     email,
                     password,
                 });
@@ -18,7 +20,7 @@ export default {
         },
         async logOut() {
             try {
-                let res = await this.$http.post("/account/logout");
+                let res = await this.$http.post("/v1/account/logout");
                 if (res.status == 200) {
                     localStorage.removeItem("roostec-base-acl");
                     this.ActionSetAuth(res.data)

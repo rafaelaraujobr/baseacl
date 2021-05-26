@@ -16,14 +16,13 @@
     >
     <q-card-section class="q-gutter-sm q-py-sm">
       <q-input
-        outlined
+        outlined 
         v-model="form.email"
         type="email"
         ref="email"
         :label="$t('email')"
         :rules="[(val) => !!val || 'Field is required']"
         clearable
-        class="bg-grey-1"
         clear-icon="close"
         @keyup.enter="logIn(form.email, form.password)"
       >
@@ -35,6 +34,7 @@
         clearable
         clear-icon="close"
         outlined
+         
         v-model="form.password"
         ref="password"
         :label="$t('password')"

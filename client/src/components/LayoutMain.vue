@@ -35,20 +35,22 @@
     <q-drawer
       v-model="leftDrawer"
       show-if-above
-      bordered
       :mini-to-overlay="menuMode == 'mouseOver'"
       :width="$q.platform.is.mobile ? 280 : 256"
       :breakpoint="700"
       :mini="miniState"
       @mouseover="menuMode == 'mouseOver' ? (miniState = false) : ''"
       @mouseout="menuMode == 'mouseOver' ? (miniState = true) : ''"
+      content-class="bg-dark text-white"
     >
+      <main-menu />
     </q-drawer>
 
     <q-drawer
       side="right"
       v-model="rightDrawer"
       bordered
+      :width="$q.platform.is.mobile ? 280 : 600"
       content-class="bg-grey-3"
     >
       <q-list>
@@ -65,9 +67,10 @@
 <script>
 import MenuUserProfile from "./widgets/MenuUserProfile.vue";
 import { TastyBurgerButton } from "vue-tasty-burgers";
+import MainMenu from "./widgets/MainMenu.vue";
 export default {
   name: "LayoutMain",
-  components: { MenuUserProfile, TastyBurgerButton },
+  components: { MenuUserProfile, TastyBurgerButton, MainMenu },
   data() {
     return {
       leftDrawer: false,

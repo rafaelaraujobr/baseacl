@@ -19,6 +19,7 @@ class MenuController {
     }
     static async findBySlugPermission(req, res) {
         console.time("runtime");
+        console.log(req.body)
         try {
             let menus = await Menu.findBySlugPermission(req.body.slug, req.body.permissions);
             if (!menus) throw 'Menus already exists!'
